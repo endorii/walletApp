@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import TransactionItem from "./TransactionItem/TransactionItem";
 
-const EditTransaction = ({ getTransactions }) => {
+const EditTransaction = () => {
 
     const [open, setOpen] = useState(false);
     
-    const transactions = useSelector((state) => state.transactions)
+    const {transactions} = useSelector((state) => state.transactions)
 
     return (
         <nav>
@@ -19,7 +19,7 @@ const EditTransaction = ({ getTransactions }) => {
                 {transactions.map((transaction) => {
                     return (
                         <TransactionItem 
-                            transaction={transaction} getTransactions={getTransactions} key={transaction.id}
+                            transaction={transaction} key={transaction.id}
                             />
                     );
                 })}

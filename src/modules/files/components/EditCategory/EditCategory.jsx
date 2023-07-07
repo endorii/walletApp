@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import CategoryItem from "./CategoryItem/CategoryItem";
 
-const EditCategory = ({ getCategories }) => {
+const EditCategory = () => {
 
     const [open, setOpen] = useState(false);
 
-    const categories = useSelector((state) => state.categories);
+    const {categories} = useSelector(state => state.categories);
 
     return (
         <nav>
@@ -19,7 +19,7 @@ const EditCategory = ({ getCategories }) => {
                 {categories.map((category) => {
                     return (
                         <CategoryItem 
-                            category={category} getCategories={getCategories} key={category.id}
+                            category={category} key={category.id}
                             />
                     );
                 })}

@@ -8,14 +8,11 @@ body {
 }
 
 .App-header{
+    margin-top: 100px;
+    margin-left: 100px;
     display: flex;
 }
 
 ul{
     list-style-type: decimal;
-}
-
-.modal{
-    display: flex;
-    flex-direction: column;
 }

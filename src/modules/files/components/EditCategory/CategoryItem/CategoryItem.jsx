@@ -1,19 +1,23 @@
 import { useState } from "react";
+import { fetchCategories } from "../../../../../store/reducers/categoriesSlice";
 
-const CategoryItem = ({category, getCategories}) => {
+import { useDispatch } from "react-redux";
 
-    const [categoryName, setCategoryName] = useState(category.title)
+const CategoryItem = ({category}) => {
+
+    const [categoryName, setCategoryName] = useState(category.label)
     const [limit, setLimit] = useState(category.limit);
-  
-    const editCategory = async (categoryID) => {
+    const dispatch = useDispatch;
+
+    const editCategory = async (label) => {
         try {
             const obj = {
-                id: `${categoryID}`,
-                title: `${categoryName}`,
+                id: `${label}`,
+                label: `${categoryName}`,
                 limit: `${limit}`
             };
     
-            await fetch(`http://localhost:3001/categories/${categoryID}`, {
+            await fetch(`http://localhost:3001/categories/${label}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -21,22 +25,22 @@ const CategoryItem = ({category, getCategories}) => {
                 body: JSON.stringify(obj),
             });
     
-            await getCategories();
+            dispatch(fetchCategories());
 
         } catch (error) {
             console.error('Помилка при виконанні PUT-запиту:', error);
         }
     };
 
-    const deleteCategory = async (categoryID) => {
+    const deleteCategory = async (label) => {
         try{
             const obj = {
-                id: `${categoryID}`,
-                title: `${categoryName}`,
+                id: `${label}`,
+                label: `${categoryName}`,
                 limit: `${limit}`
             };
 
-            await fetch(`http://localhost:3001/categories/${categoryID}`, {
+            await fetch(`http://localhost:3001/categories/${label}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -44,7 +48,7 @@ const CategoryItem = ({category, getCategories}) => {
                 body: JSON.stringify(obj),
             });
     
-            await getCategories();
+            dispatch(fetchCategories())
 
         } catch (error) {
             console.error('Помилка при виконанні DELETE-запиту:', error);

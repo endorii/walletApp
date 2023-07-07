@@ -1,12 +1,26 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import { useDispatch } from "react-redux";
+import { fetchTransactions } from "../../../../store/reducers/transactionsSlice";
+import { Button } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from '@mui/icons-material/Close';
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import { useSelector } from "react-redux";
 
-const AddTransaction = ({getTransactions}) => {
+const AddTransaction = () => {
     const [open, setOpen] = useState(false);
     const [transactionName, setTransactionName] = useState('');
     const [transactionValue, setTransactionValue] = useState(0);
     const [transactionCategory, setTransactionCategory] = useState('');
     const [transactionDate, setTransactionDate] = useState('');
+
+    const dispatch = useDispatch();
+    const {categories} = useSelector(state => state.categories);
 
     let today = new Date();
     let year = today.getFullYear();
@@ -14,8 +28,15 @@ const AddTransaction = ({getTransactions}) => {
     let day = ('0' + today.getDate()).slice(-2);
     let formattedDate = year + '-' + month + '-' + day;
 
-    const createObj = async() => {
+    const clearForm = () => {
+        setTransactionName('');
+        setTransactionValue(0);
+        setTransactionCategory('');
+        setTransactionDate('');
+        setOpen(false);
+    }
 
+    const createObj = async() => {
         try {
             const obj = {
                 "id": `${uuidv4()}`,
@@ -33,7 +54,7 @@ const AddTransaction = ({getTransactions}) => {
               body: JSON.stringify(obj),
             });
             
-            await getTransactions();
+            dispatch(fetchTransactions());
 
         } catch (error) {
         console.error('Помилка при виконанні POST-запиту:', error);
@@ -41,58 +62,116 @@ const AddTransaction = ({getTransactions}) => {
     }
     
     return (
-        <nav>
-            <button className="modal-btn" onClick={() => setOpen(true)}>Нова транзакція</button>
-            {open ? <div className="overlay">
-                <div className="modal">
-                    
-                    <label htmlFor='name'>Назва транзакції:</label>
-                    <input 
-                        type="text" 
-                        name='name' 
-                        value={transactionName} 
-                        onChange={e => setTransactionName(e.target.value)}
-                        placeholder='Введіть назву транзакції'/>
+        <Box>
+            <Button     
+                onClick={() => setOpen(!open)}
+                color="inherit" 
+                variant='contained' 
+                sx={{mr: 20, color: 'black'}}
+                endIcon={<AddIcon />}
+            >Додати транзакцію</Button>
+            {open ? 
+            
+            <Box className="overlay"
+                sx={{
+                    position: "fixed",
+                    zIndex: "2000",
+                    paddingTop: "100px",
+                    left: "0",
+                    top: "0",
+                    width: "100%",
+                    height: "100%",
+                    overflow: "auto",
+                    backgroundColor: "rgba(0,0,0,0.4)",
+                }}
+            >
+                <Box className="modal" 
+                sx={{
+                    p: 7,
+                    pt: 3,
+                    position: 'relative', 
+                    borderRadius: "5px", 
+                    backgroundColor: "#fefefe",
+                    margin: "auto",
+                    border: "1px solid #888",
+                    width: "50%"
+                }}>
+                    <Typography className="modal_title" color='primary' sx={{fontSize: "30px", fontWeight: 'bold', textAlign: 'center'}}>
+                        Додати транзакцію
+                    </Typography>
+                                    
+                    <Box className="modal_form"
+                    sx={{
+                        mt: 3,
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "10px",
+                    }}
+                    >
+                        <TextField
+                            value={transactionName} 
+                            onChange={e => setTransactionName(e.target.value)}
+                            required
+                            id="outlined-required"
+                            label="Назва"
+                            />
 
-                    <label htmlFor='category'>Категорія:</label>
-                    <input 
-                        type="text" 
-                        name='category' 
-                        value={transactionCategory} 
-                        onChange={e => setTransactionCategory(e.target.value)}
-                        placeholder='Введіть назву категорії'/>
-                    
-                    <label htmlFor='value'>Значення:</label>
-                    <input 
-                        type="number" 
-                        name='value' 
-                        value={transactionValue} 
-                        onClick={() => {
-                            transactionValue === 0 ? setTransactionValue('') : setTransactionValue(transactionValue)
-                        }}
-                        onChange={e => setTransactionValue(e.target.value)}
-                        placeholder='Введіть ліміт коштів'/>
+                        <TextField
+                            value={transactionValue} 
+                            onClick={() => {
+                                transactionValue === 0 ? setTransactionValue('') : setTransactionValue(transactionValue)
+                            }}
+                            onChange={e => setTransactionValue(e.target.value)}
+                            required
+                            id="outlined-required"
+                            label="Ліміт"
+                            />
 
-                    <label htmlFor='date'>Дата:</label>
-                    <input 
-                        type="date" 
-                        name='date' 
-                        value={transactionDate}
-                        onClick={() => transactionDate === '' ? setTransactionDate(formattedDate) : transactionDate}
-                        onChange={e => setTransactionDate(e.target.value)}
+                        <Autocomplete
+                            disablePortal
+                            id="combo-box-demo"
+                            options={categories}
+                            sx={{ width: 300 }}
+                            value={transactionCategory}
+                            onChange={(event, value) => setTransactionCategory(value ? value.label : "")}
+
+                            renderInput={(params) => <TextField {...params} 
+                            label="Категорія" />}
                         />
 
-                    <button type='submit' onClick={e => {
-                        e.preventDefault();
-                        createObj();
+                        <TextField
+                            value={transactionDate} 
+                            onClick={() => transactionDate === '' ? setTransactionDate(formattedDate) : transactionDate}
+                            onChange={e => setTransactionDate(e.target.value)}
+                            required
+                            id="outlined-required"
+                            label="Дата"
+                            />
 
-                        }
-                    }>Додати</button>
+                        <Button 
+                            color="primary"
+                            variant="contained"
+                            type='submit' 
+                            onClick={e => {
+                            e.preventDefault();
+                            createObj();
+                            clearForm();
+                            }
+                        }>Додати</Button>
+                    </Box>
 
-                    <button className='modal-close' onClick={() => setOpen(false)}>X</button>
-                </div>
-            </div> : null}
-        </nav>  
+                    <IconButton
+                        size="large"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{position: 'absolute', top: -5, right: -5}}
+                        onClick={() => setOpen(!open)}>
+                            
+                        <CloseIcon color="primary" />
+                    </IconButton>
+                </Box>
+            </Box> : null}
+        </Box>  
     )
 }
 

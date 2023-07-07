@@ -1,18 +1,22 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import { useDispatch } from "react-redux";
+import { fetchCategories } from "../../../../store/reducers/categoriesSlice";
 
-const AddCategory = ({ getCategories}) => {
+const AddCategory = () => {
 
     const [open, setOpen] = useState(false);
     const [category, setCategory] = useState('');
     const [limit, setLimit] = useState(0);
+
+    const dispatch = useDispatch();
 
     const createObj = async() => {
         
         try {
             const obj = {
                 "id": `${uuidv4()}`,
-                "title": `${category}`,
+                "label": `${category}`,
                 "limit": `${limit}`
             }
 
@@ -24,7 +28,7 @@ const AddCategory = ({ getCategories}) => {
               body: JSON.stringify(obj),
             });
             
-            await getCategories();
+            dispatch(fetchCategories())
 
         } catch (error) {
         console.error('Помилка при виконанні POST-запиту:', error);

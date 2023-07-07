@@ -1,11 +1,16 @@
 import { useState } from "react";
 
-const TransactionItem = ({transaction, getTransactions}) => {
+import { useDispatch } from "react-redux";
+import { fetchTransactions } from "../../../../../store/reducers/transactionsSlice";
+
+const TransactionItem = ({transaction}) => {
 
     const [transactionName, setTransactionName] = useState(transaction.name);
     const [transactionValue, setTransactionValue] = useState(transaction.value);
     const [transactionCategory, setTransactionCategory] = useState(transaction.category);
     const [transactionDate, setTransactionDate] = useState(transaction.date);
+
+    const dispatch = useDispatch();
   
     const editTransaction = async (transactionID) => {
         try {
@@ -13,7 +18,7 @@ const TransactionItem = ({transaction, getTransactions}) => {
                 "id": `${transactionID}`,
                 "name": `${transactionName}`,
                 "value": `${transactionValue}`,
-                "categoryID": `${transactionCategory}`,
+                "category": `${transactionCategory}`,
                 "date": `${transactionDate}`
             }
     
@@ -25,7 +30,7 @@ const TransactionItem = ({transaction, getTransactions}) => {
                 body: JSON.stringify(obj),
             });
     
-            await getTransactions();
+            dispatch(fetchTransactions());
         } catch (error) {
             console.error('Помилка при виконанні PUT-запиту:', error);
         }
@@ -37,7 +42,7 @@ const TransactionItem = ({transaction, getTransactions}) => {
                 "id": `${transactionID}`,
                 "name": `${transactionName}`,
                 "value": `${transactionValue}`,
-                "categoryID": `${transactionCategory}`,
+                "category": `${transactionCategory}`,
                 "date": `${transactionDate}`
             };
 
@@ -49,7 +54,7 @@ const TransactionItem = ({transaction, getTransactions}) => {
                 body: JSON.stringify(obj),
             });
     
-            getTransactions();
+            dispatch(fetchTransactions());
 
         } catch (error) {
             console.error('Помилка при виконанні DELETE-запиту:', error);
