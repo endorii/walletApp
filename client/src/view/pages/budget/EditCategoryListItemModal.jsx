@@ -1,43 +1,30 @@
 import { useState, useEffect } from "react";
 import { fetchCategories } from "../../../store/reducers/categoriesSlice";
 import { fetchTransactions } from "../../../store/reducers/transactionsSlice";
-import IconButton from "@mui/material/IconButton";
 import CloseIcon from '@mui/icons-material/Close';
-import { TextField, Typography, Box, Button } from "@mui/material";
+import { TextField, Typography, Box, Button, IconButton, Autocomplete } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
-import {Autocomplete} from "@mui/material";
 import { useDispatch } from "react-redux";
+import { editCategoryItem } from "../../../modules/files/actions/category";
 
 const EditCategoryListItemModal = ({activeCategory}) => {
 
     const [open, setOpen] = useState(false);
-    const [categoryName, setCategoryName] = useState(activeCategory.label);
+    const [label, setLabel] = useState(activeCategory.label);
     const [limit, setLimit] = useState(activeCategory.limit);
     const [type, setType] = useState(activeCategory.type);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setCategoryName(activeCategory.label);
+        setLabel(activeCategory.label);
         setLimit(activeCategory.limit);
+        setType(activeCategory.type)
     }, [activeCategory]);
 
-    const editCategory = async (label) => {
+    const editCategory = async (id) => {
         try {
-            const obj = {
-                id: `${label}`,
-                label: `${categoryName}`,
-                limit: Number(limit),
-                type: type
-            };
-    
-            await fetch(`http://localhost:3001/categories/${label}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(obj),
-            });
+            await editCategoryItem(id, label, limit, type);
     
             dispatch(fetchCategories());
             dispatch(fetchTransactions());
@@ -95,10 +82,10 @@ const EditCategoryListItemModal = ({activeCategory}) => {
 
                         <TextField
 
-                            error={categoryName.length <= 2 || !categoryName}
-                            helperText={categoryName.length <= 2 ? 'Введіть більше 2-х символів' : null}
-                            value={categoryName} 
-                            onChange={e => setCategoryName(e.target.value)}
+                            error={label.length <= 2 || !label}
+                            helperText={label.length <= 2 ? 'Введіть більше 2-х символів' : null}
+                            value={label} 
+                            onChange={e => setLabel(e.target.value)}
                             required
                             id="outlined-required"
                             label="Назва"
@@ -128,13 +115,13 @@ const EditCategoryListItemModal = ({activeCategory}) => {
                         />
 
                         <Button 
-                            disabled={categoryName.length <= 2 || !categoryName || limit < 0 || !limit}
+                            disabled={label.length <= 2 || !label || limit < 0 || !limit}
                             color="success"
                             variant="contained"
                             type='submit' 
                             onClick={e => {
                             e.preventDefault();
-                            editCategory(activeCategory.id);
+                            editCategory(activeCategory._id);
                             setOpen(!open);
                             }
                         }>Редагувати</Button>   

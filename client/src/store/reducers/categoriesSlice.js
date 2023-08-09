@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { getAllCategories } from "../../modules/files/actions/category";
 
 const initialState = {
     categories: [],
@@ -9,9 +10,8 @@ const initialState = {
 export const fetchCategories = createAsyncThunk(
     "categories/fetchCategories",
     async () => {
-      const response = await fetch("http://localhost:3001/categories");
-      const data = await response.json();
-      return data;
+      const response = getAllCategories();
+      return response;
     }
 );
 

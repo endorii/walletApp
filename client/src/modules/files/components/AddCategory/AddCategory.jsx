@@ -1,21 +1,17 @@
 import { useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
 import { useDispatch } from "react-redux";
 import { fetchCategories } from "../../../../store/reducers/categoriesSlice";
-import { Button, Divider } from "@mui/material";
+import { Button, Divider, Autocomplete, Box, TextField, IconButton, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import TextField from '@mui/material/TextField';
-import IconButton from "@mui/material/IconButton";
 import CloseIcon from '@mui/icons-material/Close';
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import {Autocomplete} from "@mui/material";
+import { addCategory } from "../../actions/category";
 
 const AddCategory = () => {
     const [open, setOpen] = useState(false);
     const [category, setCategory] = useState('');
     const [limit, setLimit] = useState(0);
     const [type, setType] = useState('');
+    const [touched, setTouched] = useState(false)
     const dispatch = useDispatch();
 
     const clearForm = () => {
@@ -27,21 +23,9 @@ const AddCategory = () => {
 
     const createObj = async() => {
         try {
-            const obj = {
-                "id": `${uuidv4()}`,
-                "label": `${category}`,
-                "limit": Number(limit),
-                "type": type
-            }
 
-            await fetch('http://localhost:3001/categories', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(obj),
-            });
-            
+            await addCategory(category, limit, type);
+
             dispatch(fetchCategories())
 
         } catch (error) {
@@ -113,9 +97,10 @@ const AddCategory = () => {
                         }}
                     >
                         <TextField
-                            error={category.length <= 2 || !category}
-                            helperText={category.length <= 2 ? 'Введіть більше 2-х символів' : null}
+                            error={touched && (category.length <= 2 || !category)}
+                            helperText={touched && category.length <= 2 ? 'Введіть більше 2-х символів' : null}
                             value={category} 
+                            onClick={() => setTouched(true)}
                             onChange={e => setCategory(e.target.value)}
                             required
                             id="outlined-required"
@@ -129,17 +114,17 @@ const AddCategory = () => {
                             sx={{ width: 250 }}
                             value={type}
                             onChange={(event, value) => {setType(value)}}
-                            renderInput={(params) => <TextField {...params} error={!type}
-                            helperText={!type ? 'Виберіть тип' : null}
+                            renderInput={(params) => <TextField onClick={() => setTouched(true)} {...params} error={touched && !type}
+                            helperText={touched && !type ? 'Виберіть тип' : null}
                             label="Тип категорії" />}
                         />
 
                         <TextField
                             type="number"
                             value={limit} 
-                            error={limit < 0 || !limit}
-                            helperText={!limit || limit < 0 ? 'Ліміт повинен бути більше 0' : null}
-                            onClick={() => setLimit('')}
+                            error={touched && (limit < 0 || !limit)}
+                            helperText={touched && (!limit || limit) < 0 ? 'Ліміт повинен бути більше 0' : null}
+                            onClick={() => {setLimit(''); setTouched(true)}}
                             onChange={e => setLimit(e.target.value)}
                             required
                             id="outlined-required"

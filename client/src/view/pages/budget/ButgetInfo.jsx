@@ -1,26 +1,29 @@
 import { Typography, Box, Paper, Divider, Button, ListItem, ListItemText, ListItemAvatar, Avatar, IconButton } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import ImageIcon from '@mui/icons-material/Image';
 import CloseIcon from '@mui/icons-material/Close';
 import EditCategoryListItemModal from "./EditCategoryListItemModal";
 import DeleteCategoryListItem from "./DeleteCategoryListItem";
 import { fetchBudget } from "../../../store/reducers/budgetSlice";
-import { useDispatch } from "react-redux";
+import { fetchCategories } from "../../../store/reducers/categoriesSlice";
+import Loader from "../../../modules/files/components/Loader/Loader";
 
 const BudgetInfo = () => {
 
     const dispatch = useDispatch();
     const {categories} = useSelector(state => state.categories);
+    const {isLoading} = useSelector(state => state.categories)
     const {budget} = useSelector(state => state.budget)
-    const [openCategoryList, setOpenCategoryList] = useState(false);
+    const [openCategoryList, setOpenCategoryList] = useState(true);
 
     useEffect(() => {
+        dispatch(fetchCategories());
         dispatch(fetchBudget());
     }, [fetchBudget])
 
     return (
-        <Box 
+        <Box
             sx={{
                 display: 'flex', 
                 justifyContent: 'center', 
@@ -93,7 +96,8 @@ const BudgetInfo = () => {
                     width: "45%",
                     mt: '1%'}}>
 
-                {!categories || categories.length === 0 ? 
+                { isLoading ? <Loader/> : 
+                !categories || categories.length === 0 ? 
 
                 <Typography 
                     sx={{
@@ -114,7 +118,7 @@ const BudgetInfo = () => {
 
                     <Box>
                         {categories.map((category) => (
-                        <Box key={category.id}
+                        <Box key={category._id}
                             
                         >
                             <ListItem>

@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { getAllTransactions } from "../../modules/files/actions/transaction";
 
 const initialState = {
   transactions: [],
@@ -9,9 +10,8 @@ const initialState = {
 export const fetchTransactions = createAsyncThunk(
   "transactions/fetchTransactions",
   async () => {
-    const response = await fetch("http://localhost:3001/transactions");
-    const data = await response.json();
-    return data;
+    const response = getAllTransactions();
+    return response;
   }
 );
 
@@ -31,7 +31,7 @@ const transactionsSlice = createSlice({
         })
         .addCase(fetchTransactions.rejected, (state, action) => {
             state.isLoading = false;
-            state.error = action.error; // зберігаємо текст помилки в стейт
+            state.error = action.error;
         })
       },
     },

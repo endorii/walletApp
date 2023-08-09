@@ -1,29 +1,29 @@
-import { Box, Typography } from '@mui/material';
-import React, { useState, useEffect } from 'react';
-import Paper from '@mui/material/Paper';
+import { Box, Typography, Paper, ListItem, ListItemText, ListItemAvatar, Avatar, Divider, IconButton } from '@mui/material';
+import { useState, useEffect } from 'react';
 import { setDate } from '../../../store/reducers/dateSlice';
-import { useDispatch } from 'react-redux';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
+import { useDispatch, useSelector } from 'react-redux';
 import ImageIcon from '@mui/icons-material/Image';
-import Divider from '@mui/material/Divider';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import IconButton from "@mui/material/IconButton";
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker } from '@mui/x-date-pickers';
 import CloseIcon from '@mui/icons-material/Close';
 import moment from 'moment/moment';
 import EditTransactionListItemModal from './EditTransactionsListItemModal';
 import DeleteTransactionsListItem from './DeleteTransactionsListItem';
+import Loader from '../../../modules/files/components/Loader/Loader';
+import { fetchTransactions } from "../../../store/reducers/transactionsSlice";
 
 const TransactionsList = ({transactions}) => {
 
+    const isLoading = useSelector(state => state.transactions.isLoading);
     const dispatch = useDispatch();
     const [activePaper, setActivePaper] = useState(false);
     const [activeTransaction, setActiveTransaction] = useState([]);
+
+    useEffect(() => {
+        dispatch(fetchTransactions());
+    }, [])
 
     function formatDate(dateString) {
         const date = moment(dateString, 'ddd MMM DD YYYY HH:mm:ss [GMT]ZZ').format('YYYY-MM-DD');
@@ -40,14 +40,13 @@ const TransactionsList = ({transactions}) => {
                 width: "45%"
             }}    
         >
-
             <LocalizationProvider dateAdapter={AdapterDayjs} >
                 <DemoContainer components={['DatePicker']} >
                     <DatePicker label="Оберіть дату транзакції" onChange={e => dispatch(setDate(formatDate(e.$d)))}/>
                 </DemoContainer>
             </LocalizationProvider>
 
-            {!transactions || transactions.length === 0 ? 
+            {isLoading ? <Loader/> : !transactions || transactions.length === 0 ? 
             <Typography sx={{textAlign: 'center', fontSize: '40px', fontWeight: '300', mt: 3}}>
                 Немає доступних транзакцій 😢
             </Typography> : 
@@ -55,9 +54,10 @@ const TransactionsList = ({transactions}) => {
             <Box>
                 <Typography sx={{fontWeight: 700, fontSize: '24px', mb: 3, textAlign: 'center'}}>{transactions[0].date}</Typography>
                 <Divider variant="middle" component="hr" />
+                
                 {transactions.map((transaction) => (
 
-                    <Box key={transaction.id} 
+                    <Box key={transaction._id} 
                     onClick={() => {setActivePaper(true); setActiveTransaction(transaction)}}
                     >
                         <ListItem>

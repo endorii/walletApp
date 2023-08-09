@@ -4,36 +4,20 @@ import { useDispatch } from "react-redux";
 import { fetchCategories } from "../../../store/reducers/categoriesSlice";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { deleteCategoryItem } from "../../../modules/files/actions/category";
 
 const DeleteCategoryListItem = ({activeCategory}) => {
 
-    const [categoryName, setCategoryName] = useState(activeCategory.label)
-    const [limit, setLimit] = useState(activeCategory.limit);
-    const [categoryID, setCategoryID] = useState(activeCategory.id)
-
+    const [categoryID, setCategoryID] = useState(activeCategory._id)
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setCategoryName(activeCategory.label);
-        setLimit(activeCategory.limit);
-        setCategoryID(activeCategory.id);
+        setCategoryID(activeCategory._id);
     }, [activeCategory]);
 
     const deleteCategory = async (categoryID) => {
         try{
-            const obj = {
-                'id': `${categoryID}`,
-                'label': `${categoryName}`,
-                'limit': `${limit}`
-            };
-
-            await fetch(`http://localhost:3001/categories/${categoryID}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(obj),
-            });
+            await deleteCategoryItem(categoryID);
     
             dispatch(fetchCategories());
 

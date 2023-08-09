@@ -1,11 +1,10 @@
-import { Box, Typography, AppBar, Toolbar, Modal, List, ListItem, ListItemText } from "@mui/material";
-import IconButton from '@mui/material/IconButton';
+import { Box, Button, Typography, AppBar, Toolbar, Modal, List, ListItem, ListItemText, IconButton } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import ReportInfo from "./ReportInfo";
-import { Button } from '@mui/material'
 import { useEffect, useState } from "react";
-
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { fetchTransactions } from "../../../store/reducers/transactionsSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Report = () => {
   const [open, setOpen] = useState(false);
@@ -15,6 +14,9 @@ const Report = () => {
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
+
+  const dispatch = useDispatch();
+  const {email} = useSelector(state => state.user.user)
   
   const dateOptions = [
     {
@@ -50,6 +52,7 @@ const Report = () => {
   ];
 
   useEffect(() => {
+    dispatch(fetchTransactions());
     setActiveDate(dateOptions[0])  
   }, [])
   
@@ -84,7 +87,7 @@ const Report = () => {
                             ml:7,
                             flexGrow:1}}>
 
-                        Гаманець
+                        {email}
                     </Typography>
 
                     <Box>

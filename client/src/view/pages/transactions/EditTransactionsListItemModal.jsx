@@ -1,10 +1,9 @@
-import { Autocomplete, TextField, Typography, Box, Button } from "@mui/material";
+import { Autocomplete, TextField, Typography, Box, Button, IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchTransactions } from "../../../store/reducers/transactionsSlice";
-import IconButton from "@mui/material/IconButton";
 import CloseIcon from '@mui/icons-material/Close';
-import { useSelector } from "react-redux";
+import { editTransactionItem } from "../../../modules/files/actions/transaction";
 
 const EditTransactionListItemModal = ({activeTransaction, activePaper, setActivePaper}) => {
 
@@ -25,22 +24,9 @@ const EditTransactionListItemModal = ({activeTransaction, activePaper, setActive
 
     const editTransaction = async (transactionID) => {
         try {
-            const obj = {
-                "id": `${transactionID}`,
-                "name": `${transactionName}`,
-                "value": Number(transactionValue),
-                "category": `${transactionCategory}`,
-                "date": `${transactionDate}`
-            }
-    
-            await fetch(`http://localhost:3001/transactions/${transactionID}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(obj),
-            });
-    
+
+            await editTransactionItem(transactionID, transactionName, transactionValue, transactionCategory, transactionDate);
+
             dispatch(fetchTransactions());
         } catch (error) {
             console.error('Помилка при виконанні PUT-запиту:', error);
@@ -52,7 +38,7 @@ const EditTransactionListItemModal = ({activeTransaction, activePaper, setActive
             <Button variant='outlined' color='success' onClick={() => setOpen(true)}>Змінити</Button>
             {open ? 
             
-            <Box className="overlay"
+            <Box
                 sx={{
                     position: "fixed",
                     zIndex: "2000",
@@ -65,7 +51,7 @@ const EditTransactionListItemModal = ({activeTransaction, activePaper, setActive
                     backgroundColor: "rgba(0,0,0,0.4)",
                 }}
             >
-                <Box className="modal" 
+                <Box 
                 sx={{
                     p: 7,
                     pt: 3,
@@ -76,7 +62,7 @@ const EditTransactionListItemModal = ({activeTransaction, activePaper, setActive
                     border: "1px solid #888",
                     width: "50%"
                 }}>
-                    <Typography className="modal_title" color='primary' sx={{fontSize: "30px", fontWeight: 'bold', textAlign: 'center'}}>
+                    <Typography color='primary' sx={{fontSize: "30px", fontWeight: 'bold', textAlign: 'center'}}>
                         Змінити транзакцію
                     </Typography>
                                     
@@ -148,7 +134,7 @@ const EditTransactionListItemModal = ({activeTransaction, activePaper, setActive
                             type='submit' 
                             onClick={e => {
                             e.preventDefault();
-                            editTransaction(activeTransaction.id);
+                            editTransaction(activeTransaction._id);
                             setOpen(!open);
                             setActivePaper(!activePaper);
                             }

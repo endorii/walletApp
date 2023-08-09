@@ -1,16 +1,21 @@
 import TransactionsList from "./TransactionsList";
-import { useSelector } from "react-redux";
-import { Box } from "@mui/material";
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import AddTransaction from "../../../modules/files/components/AddTransaction/AddTransaction";
-import IconButton from '@mui/material/IconButton';
+import { useSelector, useDispatch } from "react-redux";
+import { Box, AppBar, Toolbar, Typography, IconButton } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
-
+import AddTransaction from "../../../modules/files/components/AddTransaction/AddTransaction";
+import { useEffect } from "react";
+import { fetchTransactions } from "../../../store/reducers/transactionsSlice";
 
 const Transactions = () => {
+
     const {transactions} = useSelector(state => state.transactions);
+    const dispatch = useDispatch();
+    const {email} = useSelector(state => state.user.user)
+
+    useEffect(()=> {
+        dispatch(fetchTransactions())
+    }, [])
+
     const date = useSelector(state => state.date)
 
     const filteredDataOnDate = () => {
@@ -41,7 +46,7 @@ const Transactions = () => {
                     
                     <Typography
                         sx={{ ml: 7, flexGrow: 1}}>
-                        Гаманець
+                        {email}
                     </Typography>
                     
                     <AddTransaction />

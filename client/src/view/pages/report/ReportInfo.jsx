@@ -1,7 +1,8 @@
-import { Box, Paper, Typography, Divider, Button } from "@mui/material";
+import { Box, Paper, Typography, Divider } from "@mui/material";
 import {Chart as ChartJs, BarElement, CategoryScale, Title,LinearScale, Tooltip } from 'chart.js'
 import { Bar } from "react-chartjs-2";
 import { useSelector } from "react-redux";
+import Loader from "../../../modules/files/components/Loader/Loader";
 
 ChartJs.register(
     BarElement, CategoryScale, LinearScale, Tooltip, Title
@@ -10,8 +11,10 @@ ChartJs.register(
 const ReportInfo = ({activeDate}) => {
 
     const {transactions} = useSelector(state => state.transactions);
-    const {startBudget} = useSelector(state => state.startBudget);
-    const {budget} = useSelector(state => state.budget);
+    const {isLoading} = useSelector(state => state.transactions)
+
+    // const {startBudget} = useSelector(state => state.startBudget);
+    // const {budget} = useSelector(state => state.budget);
 
     const filteredTransactions = transactions.filter(transaction => {
         const date = new Date(transaction.date);
@@ -62,7 +65,7 @@ const ReportInfo = ({activeDate}) => {
                         <Typography sx={{
                             color: 'grey'
                         }}>Початковий баланс</Typography>
-                        <Typography>{startBudget}</Typography>
+                        {/* <Typography>{startBudget}</Typography> */}
                     </Box>
                     <Box sx={{
                         textAlign: 'center',
@@ -71,19 +74,19 @@ const ReportInfo = ({activeDate}) => {
                         <Typography sx={{
                             color: 'grey'
                         }}>Кінцевий баланс</Typography>
-                        <Typography>{budget}</Typography>
+                        {/* <Typography>{budget}</Typography> */}
                     </Box>
                 </Box>
             
                 <Divider />
 
-                <Box>
+                {isLoading ? <Loader/> : <Box>
                     <Bar style={{
                         padding: '20px',
                     }} 
                         data={data} 
                     ></Bar>
-                </Box>
+                </Box>}
 
             </Paper>
         </Box>

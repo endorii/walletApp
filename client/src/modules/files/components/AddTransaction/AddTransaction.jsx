@@ -1,27 +1,25 @@
 import { useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchTransactions } from "../../../../store/reducers/transactionsSlice";
-import { Button, Divider } from "@mui/material";
+import { Button, Divider, TextField,Autocomplete, IconButton, Typography, Box } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import IconButton from "@mui/material/IconButton";
 import CloseIcon from '@mui/icons-material/Close';
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import { useSelector } from "react-redux";
-import { fetchBudget } from "../../../../store/reducers/budgetSlice";;
+import { addTransaction } from "../../actions/transaction";
+// import { fetchBudget } from "../../../../store/reducers/budgetSlice";
+// import { v4 as uuidv4 } from 'uuid';
 
 const AddTransaction = () => {
 
-    const [open, setOpen] = useState(false);
     const [transactionName, setTransactionName] = useState('');
     const [transactionValue, setTransactionValue] = useState('');
     const [transactionCategory, setTransactionCategory] = useState('');
     const [transactionDate, setTransactionDate] = useState('');
+    
+    const [open, setOpen] = useState(false);
+    const [touched, setTouched] = useState(false);
 
     const dispatch = useDispatch();
+
     const {categories} = useSelector(state => state.categories);
     const {budget} = useSelector(state => state.budget);
 
@@ -41,49 +39,35 @@ const AddTransaction = () => {
 
     const createObj = async() => {
         try {
-            const obj = {
-                "id": `${uuidv4()}`,
-                "name": `${transactionName}`,
-                "value": Number(transactionValue),
-                "category": `${transactionCategory}`,
-                "date": `${transactionDate}`
-            }
+            await addTransaction(transactionName, transactionValue, transactionCategory, transactionDate);
 
-            await fetch('http://localhost:3001/transactions', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(obj),
-            });
-            
             dispatch(fetchTransactions());
 
         } catch (error) {
-        console.error('Помилка при виконанні POST-запиту:', error);
+            console.error('Помилка при виконанні POST-запиту:', error);
         }
     }
 
-    const minusBudget = async(budget) => {
-        try {
-            const obj = {
-                "value": Number(budget) + Number(transactionValue),
-            }
+    // const minusBudget = async(budget) => {
+    //     try {
+    //         const obj = {
+    //             "value": Number(budget) + Number(transactionValue),
+    //         }
 
-            await fetch('http://localhost:3001/budget', {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(obj),
-            });
+    //         await fetch('http://localhost:3001/budget', {
+    //           method: 'PUT',
+    //           headers: {
+    //             'Content-Type': 'application/json',
+    //           },
+    //           body: JSON.stringify(obj),
+    //         });
             
-            dispatch(fetchBudget());
+    //         dispatch(fetchBudget());
 
-        } catch (error) {
-        console.error('Помилка при виконанні PUT-запиту:', error);
-        }
-    }
+    //     } catch (error) {
+    //     console.error('Помилка при виконанні PUT-запиту:', error);
+    //     }
+    // }
     
     return (
         <Box>
@@ -149,10 +133,11 @@ const AddTransaction = () => {
                         }}>
 
                         <TextField
-                            error={transactionName.length <= 2 || !transactionName}
-                            helperText={transactionName.length <= 2 ? 'Введіть більше 2-х символів' : null}
+                            error={ touched && (transactionName.length <= 2 || !transactionName)}
+                            helperText={touched && (transactionName.length <= 2) ? 'Введіть більше 2-х символів' : null}
                             value={transactionName} 
                             onChange={e => setTransactionName(e.target.value)}
+                            onClick={() => setTouched(true)}
                             required
                             id="outlined-required"
                             label="Назва"
@@ -160,9 +145,10 @@ const AddTransaction = () => {
 
                         <TextField
                             type="number"
-                            error={!transactionValue}
-                            helperText={!transactionValue ? 'Введіть значення' : null}
+                            error={touched && !transactionValue}
+                            helperText={touched && !transactionValue ? 'Введіть значення' : null}
                             value={transactionValue} 
+                            onClick={() => setTouched(true)}
                             onChange={e => setTransactionValue(e.target.value)}
                             required
                             id="outlined-required"
@@ -183,14 +169,14 @@ const AddTransaction = () => {
                                   setTransactionValue(transactionValue);
                                 }
                             }}
-                            renderInput={(params) => <TextField {...params} error={!transactionCategory.toString()}
-                            helperText={!transactionCategory ? 'Виберіть категорію' : null}
+                            renderInput={(params) => <TextField onClick={() => setTouched(true)} {...params} error={touched && (!transactionCategory.toString())}
+                            helperText={touched && !transactionCategory ? 'Виберіть категорію' : null}
                             label="Категорія" />}
                         />
 
                         <TextField
-                            error={transactionDate.length <= 9 || !transactionDate}
-                            helperText={transactionDate.length <= 9 ? 'Введіть дату типу: "РРРР-ММ-ДД"' : null}
+                            error={touched && (transactionDate.length <= 9 || !transactionDate)}
+                            helperText={touched && transactionDate.length <= 9 ? 'Введіть дату типу: "РРРР-ММ-ДД"' : null}
                             value={transactionDate} 
                             onClick={() => transactionDate === '' ? setTransactionDate(formattedDate) : transactionDate}
                             onChange={e => setTransactionDate(e.target.value)}
@@ -206,7 +192,7 @@ const AddTransaction = () => {
                             type='submit' 
                             onClick={e => {
                             e.preventDefault();
-                            minusBudget(budget);
+                            // minusBudget(budget);
                             createObj();
                             clearForm()}
 

@@ -1,8 +1,4 @@
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import {AppBar, Box, Toolbar, Typography, IconButton} from '@mui/material';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SavingsIcon from '@mui/icons-material/Savings';
 import AssessmentIcon from '@mui/icons-material/Assessment';

@@ -1,7 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+let today = new Date();
+let date = today.getFullYear() + '-' + (today.getMonth() + 1).toString().padStart(2, '0') + '-' + today.getDate().toString().padStart(2, '0');
+
+
 const initialState = {
-    date: '2023-07-05'
+    date: {date}
 }
 
 const dateSlice = createSlice({
