@@ -8,7 +8,8 @@ const Registartion = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [touched, setTouched] = useState(false);
+    const [touchedEmail, setTouchedEmail] = useState(false);
+    const [touchedPassword, setTouchedPassword] = useState(false);
 
     let navigate = useNavigate(); 
     const routeChange = () =>{ 
@@ -34,20 +35,24 @@ const Registartion = () => {
             <Typography variant='h2'>Реєстрація</Typography>
             <Typography variant='h6' sx={{ fontWeight: 300, fontSize: "18px"}}>За допомогою аккаунту Wallet</Typography>
             <TextField 
-                error={touched && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)}
-                helperText={touched && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email) ? 'Введіть правильний email' : null}
-                onClick={() => setTouched(true)}
+                sx={{maxWidth: "300px",}}
+                error={touchedEmail && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)}
+                helperText={touchedEmail && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email) ? 'Введіть правильний email' : null}
+                onBlur={() => setTouchedEmail(true)}
                 onChange={e => setEmail(e.target.value)}
                 value={email}
+                fullWidth
                 type="text" 
                 placeholder='Email' />
 
             <TextField
-                error={touched && (password.length <= 3 || !password)}
-                helperText={touched && (!password || password.length <= 3) ? 'Пароль повинен містити більше 3 символів' : null}
-                onClick={() => setTouched(true)}
+                sx={{maxWidth: "300px",}}
+                error={touchedPassword && (password.length <= 3 || !password)}
+                helperText={touchedPassword && (!password || password.length <= 3) ? 'Пароль повинен містити більше 3 символів' : null}
+                onBlur={() => setTouchedPassword(true)}
                 onChange={e => setPassword(e.target.value)}
                 value={password}
+                fullWidth
                 type="password" 
                 placeholder='Password' />
 

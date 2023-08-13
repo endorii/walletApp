@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { fetchCategories } from "../../../store/reducers/categoriesSlice";
 import { fetchTransactions } from "../../../store/reducers/transactionsSlice";
 import CloseIcon from '@mui/icons-material/Close';
-import { TextField, Typography, Box, Button, IconButton, Autocomplete } from "@mui/material";
+import { TextField, Typography, Box, Button, IconButton, Autocomplete, Modal } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import { useDispatch } from "react-redux";
 import { editCategoryItem } from "../../../modules/files/actions/category";
@@ -39,12 +39,10 @@ const EditCategoryListItemModal = ({activeCategory}) => {
                 <IconButton aria-label="edit" color="success" onClick={() => setOpen(true)}>
                     <EditIcon />
                 </IconButton>
-            {open ? 
-            
+        <Modal open={open}>
             <Box className="overlay"
                 sx={{
                     position: "fixed",
-                    zIndex: "2000",
                     paddingTop: "100px",
                     left: "0",
                     top: "0",
@@ -138,7 +136,8 @@ const EditCategoryListItemModal = ({activeCategory}) => {
                         <CloseIcon color="primary" />
                     </IconButton>
                 </Box>
-            </Box> : null}
+            </Box>
+        </Modal>
         </Box>
     )
 };

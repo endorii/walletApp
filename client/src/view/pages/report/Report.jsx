@@ -10,14 +10,14 @@ const Report = () => {
   const [open, setOpen] = useState(false);
   const [buttonText, setButtonText] = useState('Цього місяця');
   const [activeDate, setActiveDate] = useState('');
-  
+
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
 
   const dispatch = useDispatch();
   const {email} = useSelector(state => state.user.user)
-  
+
   const dateOptions = [
     {
       label: 'Цього місяця',
@@ -53,38 +53,28 @@ const Report = () => {
 
   useEffect(() => {
     dispatch(fetchTransactions());
-    setActiveDate(dateOptions[0])  
+    setActiveDate(dateOptions[0])
   }, [])
-  
+
   const handleDateOptionClick = (option) => {
     setActiveDate(option);
     setButtonText(option.label);
     setOpen(false);
   };
-  
+
   return (
     <Box>
         <Box>
-            <AppBar 
+            <AppBar sx={{zIndex: 1000}}
                 position="fixed">
 
                 <Toolbar sx={{
                     p: 0,
                     flexGrow: 1}}>
 
-                    <IconButton
-                        size="large"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{m: 0, p: 0.5}}
-                        >
-
-                        <MenuIcon />
-                    </IconButton>
-
                     <Typography
                         sx={{
-                            ml:7,
+                            ml:12,
                             flexGrow:1}}>
 
                         {email}
@@ -111,12 +101,19 @@ const Report = () => {
             <ReportInfo activeDate={activeDate}/>
 
         </Box>
-        
+
         <Modal
           open={open}
           onClose={() => setOpen(false)}
         >
-          <Box sx={{width:'35%',bgcolor:'background.paper',p:5,m:'auto',mt:'10%',outline:'none'}}>
+          <Box
+            sx={{
+              width:'35%',
+              bgcolor:'background.paper',
+              p:5,
+              m:'auto',
+              mt:'10%',
+              outline:'none'}}>
             <List>
               {dateOptions.map((option) => (
                 <ListItem button key={option.label} onClick={() => {handleDateOptionClick(option)}}>

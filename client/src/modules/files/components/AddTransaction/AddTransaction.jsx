@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTransactions } from "../../../../store/reducers/transactionsSlice";
-import { Button, Divider, TextField,Autocomplete, IconButton, Typography, Box } from "@mui/material";
+import { Button, Divider, TextField, IconButton, Typography, Box, Modal } from "@mui/material";
+import {Autocomplete} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { addTransaction } from "../../actions/transaction";
@@ -10,30 +11,35 @@ import { addTransaction } from "../../actions/transaction";
 
 const AddTransaction = () => {
 
-    const [transactionName, setTransactionName] = useState('');
-    const [transactionValue, setTransactionValue] = useState('');
-    const [transactionCategory, setTransactionCategory] = useState('');
-    const [transactionDate, setTransactionDate] = useState('');
-    
-    const [open, setOpen] = useState(false);
-    const [touched, setTouched] = useState(false);
-
-    const dispatch = useDispatch();
-
-    const {categories} = useSelector(state => state.categories);
-    const {budget} = useSelector(state => state.budget);
-
     let today = new Date();
     let year = today.getFullYear();
     let month = ('0' + (today.getMonth() + 1)).slice(-2);
     let day = ('0' + today.getDate()).slice(-2);
     let formattedDate = year + '-' + month + '-' + day;
 
+    const [transactionName, setTransactionName] = useState('');
+    const [transactionValue, setTransactionValue] = useState('');
+    const [transactionCategory, setTransactionCategory] = useState('');
+    const [transactionDate, setTransactionDate] = useState(formattedDate);
+
+    const [touchedTransactionName, setTouchedTransactionName] = useState(false);
+    const [touchedTransactionValue, setTouchedTransactionValue] = useState(false);
+    const [touchedTransactionCategory, setTouchedTransactionCategory] = useState(false);
+    const [touchedTransactionDate, setTouchedTransactionDate] = useState(false);
+    
+    const [open, setOpen] = useState(false);
+
+    const dispatch = useDispatch();
+
+    const {categories} = useSelector(state => state.categories);
+    const {basicCategories} = useSelector(state => state.categories);
+    const {budget} = useSelector(state => state.budget);
+
     const clearForm = () => {
         setTransactionName('');
         setTransactionValue('');
         setTransactionCategory('');
-        setTransactionDate('');
+        setTransactionDate(formattedDate);
         setOpen(false);
     }
 
@@ -47,30 +53,9 @@ const AddTransaction = () => {
             console.error('Помилка при виконанні POST-запиту:', error);
         }
     }
-
-    // const minusBudget = async(budget) => {
-    //     try {
-    //         const obj = {
-    //             "value": Number(budget) + Number(transactionValue),
-    //         }
-
-    //         await fetch('http://localhost:3001/budget', {
-    //           method: 'PUT',
-    //           headers: {
-    //             'Content-Type': 'application/json',
-    //           },
-    //           body: JSON.stringify(obj),
-    //         });
-            
-    //         dispatch(fetchBudget());
-
-    //     } catch (error) {
-    //     console.error('Помилка при виконанні PUT-запиту:', error);
-    //     }
-    // }
     
     return (
-        <Box>
+        <Box sx={{}}>
             <Button     
                 onClick={() => setOpen(!open)}
                 color="inherit" 
@@ -79,138 +64,137 @@ const AddTransaction = () => {
                 endIcon={<AddIcon />}
 
             >Додати транзакцію</Button>
-            {open ? 
-            
-            <Box 
-                sx={{
-                    position: "fixed",
-                    zIndex: "2000",
-                    paddingTop: "100px",
-                    left: "0",
-                    top: "0",
-                    width: "100%",
-                    height: "100%",
-                    overflow: "auto",
-                    backgroundColor: "rgba(0,0,0,0.4)",
-                }}
-            >
+            <Modal open={open}>
                 <Box 
                     sx={{
-                        p: 7,
-                        pt: 3,
-                        position: 'relative', 
-                        borderRadius: "5px", 
-                        backgroundColor: "#fefefe",
-                        margin: "auto",
-                        border: "1px solid #888",
-                        width: "50%"
-                    }}>
-
-                    <Typography 
-                        color='primary' 
+                        position: "fixed",
+                        paddingTop: "100px",
+                        left: "0",
+                        top: "0",
+                        width: "100%",
+                        height: "100%",
+                        overflow: "auto",
+                        backgroundColor: "rgba(0,0,0,0.4)",
+                    }}
+                >
+                    <Box 
                         sx={{
-                            mb: 2, 
-                            fontSize: "30px", 
-                            fontWeight: 'bold', 
-                            textAlign: 'center'}}>
-
-                        Додати транзакцію
-                    </Typography>
-
-                    <Divider 
-                        variant="middle" 
-                        component="hr" />
-                                    
-                    <Box
-                        component="form"
-                        autoComplete="off"
-                        sx={{
-                            mt: 3,
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: 'center',
-                            gap: "10px",
+                            p: 7,
+                            pt: 3,
+                            position: 'relative', 
+                            borderRadius: "5px", 
+                            backgroundColor: "#fefefe",
+                            margin: "auto",
+                            border: "1px solid #888",
+                            width: "50%"
                         }}>
 
-                        <TextField
-                            error={ touched && (transactionName.length <= 2 || !transactionName)}
-                            helperText={touched && (transactionName.length <= 2) ? 'Введіть більше 2-х символів' : null}
-                            value={transactionName} 
-                            onChange={e => setTransactionName(e.target.value)}
-                            onClick={() => setTouched(true)}
-                            required
-                            id="outlined-required"
-                            label="Назва"
+                        <Typography 
+                            color='primary' 
+                            sx={{
+                                mb: 2, 
+                                fontSize: "30px", 
+                                fontWeight: 'bold', 
+                                textAlign: 'center'}}>
+
+                            Додати транзакцію
+                        </Typography>
+
+                        <Divider 
+                            variant="middle" 
+                            component="hr" />
+                                        
+                        <Box
+                            component="form"
+                            autoComplete="off"
+                            sx={{
+                                mt: 3,
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: 'center',
+                                gap: "10px",
+                            }}>
+
+                            <TextField
+                                error={ touchedTransactionName && (transactionName.length <= 2 || !transactionName)}
+                                helperText={touchedTransactionName && (transactionName.length <= 2) ? 'Введіть більше 2-х символів' : null}
+                                value={transactionName} 
+                                onChange={e => setTransactionName(e.target.value)}
+                                onBlur={() => setTouchedTransactionName(true)}
+                                required
+                                id="outlined-required"
+                                label="Назва"
+                                />
+
+                            <TextField
+                                type="number"
+                                error={touchedTransactionValue && !transactionValue}
+                                helperText={touchedTransactionValue && !transactionValue ? 'Введіть значення' : null}
+                                value={transactionValue} 
+                                onBlur={() => setTouchedTransactionValue(true)}
+                                onChange={e => setTransactionValue(e.target.value)}
+                                required
+                                id="outlined-required"
+                                label="Значення"
+                                />
+
+                            <Autocomplete
+                                disablePortal
+                                id="combo-box-demo"
+                                options={categories.concat(basicCategories)}
+                                sx={{ width: 300 }}
+                                value={transactionCategory}
+                                onChange={(event, value) => {
+                                    setTransactionCategory(value ? value.label : "");
+                                    if (value && value.type === "Витрати") {
+                                    setTransactionValue(-transactionValue);
+                                    } else {
+                                    setTransactionValue(transactionValue);
+                                    }
+                                }}
+                                renderInput={(params) => <TextField onBlur={() => setTouchedTransactionCategory(true)} {...params} error={touchedTransactionCategory && (!transactionCategory.toString())}
+                                helperText={touchedTransactionCategory && !transactionCategory ? 'Виберіть категорію' : null}
+                                label="Категорія" />}
                             />
 
-                        <TextField
-                            type="number"
-                            error={touched && !transactionValue}
-                            helperText={touched && !transactionValue ? 'Введіть значення' : null}
-                            value={transactionValue} 
-                            onClick={() => setTouched(true)}
-                            onChange={e => setTransactionValue(e.target.value)}
-                            required
-                            id="outlined-required"
-                            label="Значення"
-                            />
+                            <TextField
+                                error={touchedTransactionDate && (transactionDate.length <= 9 || !transactionDate)}
+                                helperText={touchedTransactionDate && transactionDate.length <= 9 ? 'Введіть дату типу: "РРРР-ММ-ДД"' : null}
+                                value={transactionDate} 
+                                onBlur={() => transactionDate === '' ? setTouchedTransactionDate(formattedDate) : transactionDate}
+                                onChange={e => setTransactionDate(e.target.value)}
+                                required
+                                id="outlined-required"
+                                label="Дата"
+                                />
 
-                        <Autocomplete
-                            disablePortal
-                            id="combo-box-demo"
-                            options={categories}
-                            sx={{ width: 300 }}
-                            value={transactionCategory}
-                            onChange={(event, value) => {
-                                setTransactionCategory(value ? value.label : "");
-                                if (value && value.type === "Витрати") {
-                                  setTransactionValue(-transactionValue);
-                                } else {
-                                  setTransactionValue(transactionValue);
-                                }
-                            }}
-                            renderInput={(params) => <TextField onClick={() => setTouched(true)} {...params} error={touched && (!transactionCategory.toString())}
-                            helperText={touched && !transactionCategory ? 'Виберіть категорію' : null}
-                            label="Категорія" />}
-                        />
+                            <Button 
+                                disabled={transactionName.length <= 2 || !transactionName || !transactionValue || !transactionCategory || transactionDate.length <= 9 || !transactionName}
+                                color="primary"
+                                variant="contained"
+                                type='submit' 
+                                onClick={e => {
+                                e.preventDefault();
+                                // minusBudget(budget);
+                                createObj();
+                                clearForm()}
 
-                        <TextField
-                            error={touched && (transactionDate.length <= 9 || !transactionDate)}
-                            helperText={touched && transactionDate.length <= 9 ? 'Введіть дату типу: "РРРР-ММ-ДД"' : null}
-                            value={transactionDate} 
-                            onClick={() => transactionDate === '' ? setTransactionDate(formattedDate) : transactionDate}
-                            onChange={e => setTransactionDate(e.target.value)}
-                            required
-                            id="outlined-required"
-                            label="Дата"
-                            />
+                            }>Додати</Button>
+                        </Box>
 
-                        <Button 
-                            disabled={transactionName.length <= 2 || !transactionName || !transactionValue || !transactionCategory || transactionDate.length <= 9 || !transactionName}
-                            color="primary"
-                            variant="contained"
-                            type='submit' 
-                            onClick={e => {
-                            e.preventDefault();
-                            // minusBudget(budget);
-                            createObj();
-                            clearForm()}
+                        <IconButton
+                            size="large"
+                            color="inherit"
+                            aria-label="menu"
+                            sx={{position: 'absolute', top: -5, right: -5}}
+                            onClick={() => {setOpen(!open); clearForm()}}>
+                                
+                            <CloseIcon color="primary" />
+                        </IconButton>
 
-                        }>Додати</Button>
                     </Box>
-
-                    <IconButton
-                        size="large"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{position: 'absolute', top: -5, right: -5}}
-                        onClick={() => setOpen(!open)}>
-                            
-                        <CloseIcon color="primary" />
-                    </IconButton>
-
                 </Box>
-            </Box> : null}
+            </Modal>
         </Box>  
     )
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchCategories } from "../../../../store/reducers/categoriesSlice";
-import { Button, Divider, Autocomplete, Box, TextField, IconButton, Typography } from "@mui/material";
+import { Button, Divider, Autocomplete, Box, TextField, IconButton, Typography, Modal } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { addCategory } from "../../actions/category";
@@ -11,7 +11,11 @@ const AddCategory = () => {
     const [category, setCategory] = useState('');
     const [limit, setLimit] = useState(0);
     const [type, setType] = useState('');
-    const [touched, setTouched] = useState(false)
+
+    const [touchedCategory, setTouchedCategory] = useState(false);
+    const [touchedLimit, setTouchedLimit] = useState(false);
+    const [touchedType, setTouchedType] = useState(false);
+
     const dispatch = useDispatch();
 
     const clearForm = () => {
@@ -43,12 +47,10 @@ const AddCategory = () => {
                 endIcon={<AddIcon />}
             >Додати категорію</Button>
 
-            {open ? 
-            
+        <Modal open={open}>
             <Box 
                 sx={{
                     position: "fixed",
-                    zIndex: "2000",
                     paddingTop: "100px",
                     left: "0",
                     top: "0",
@@ -97,10 +99,10 @@ const AddCategory = () => {
                         }}
                     >
                         <TextField
-                            error={touched && (category.length <= 2 || !category)}
-                            helperText={touched && category.length <= 2 ? 'Введіть більше 2-х символів' : null}
+                            error={touchedCategory && (category.length <= 2 || !category)}
+                            helperText={touchedCategory && category.length <= 2 ? 'Введіть більше 2-х символів' : null}
                             value={category} 
-                            onClick={() => setTouched(true)}
+                            onBlur={() => setTouchedCategory(true)}
                             onChange={e => setCategory(e.target.value)}
                             required
                             id="outlined-required"
@@ -114,17 +116,18 @@ const AddCategory = () => {
                             sx={{ width: 250 }}
                             value={type}
                             onChange={(event, value) => {setType(value)}}
-                            renderInput={(params) => <TextField onClick={() => setTouched(true)} {...params} error={touched && !type}
-                            helperText={touched && !type ? 'Виберіть тип' : null}
+                            renderInput={(params) => <TextField onBlur={() => setTouchedType(true)} {...params} error={touchedType && !type}
+                            helperText={touchedType && !type ? 'Виберіть тип' : null}
                             label="Тип категорії" />}
                         />
 
                         <TextField
                             type="number"
                             value={limit} 
-                            error={touched && (limit < 0 || !limit)}
-                            helperText={touched && (!limit || limit) < 0 ? 'Ліміт повинен бути більше 0' : null}
-                            onClick={() => {setLimit(''); setTouched(true)}}
+                            error={touchedLimit && (limit < 0 || !limit)}
+                            helperText={touchedLimit && (!limit || limit) < 0 ? 'Ліміт повинен бути більше 0' : null}
+                            onClick={() => setLimit('')}
+                            onBlur={() => {setTouchedLimit(true)}}
                             onChange={e => setLimit(e.target.value)}
                             required
                             id="outlined-required"
@@ -154,7 +157,8 @@ const AddCategory = () => {
                         <CloseIcon color="primary" />
                     </IconButton>   
                 </Box>
-            </Box> : null}
+            </Box>
+        </Modal>
         </Box>  
     )
 };

@@ -2,6 +2,20 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllCategories } from "../../modules/files/actions/category";
 
 const initialState = {
+    basicCategories: [
+        {
+            id: 1,
+            label: "Інше",
+            limit: 0,
+            type: "Витрати",
+        },
+        {
+            id: 2,
+            label: "Зарплата",
+            limit: 0,
+            type: "Прибутки",
+        },
+    ],
     categories: [],
     isLoading: false,
     error : null

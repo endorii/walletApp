@@ -8,7 +8,7 @@ router.post('/categories', authMiddleware,
         try {
             const {label, limit, type} = req.body;
 
-            const checkedCategoryName = await Category.findOne({label});
+            const checkedCategoryName = await Category.findOne({user: req.user.id, label});
             if (checkedCategoryName){
                 return res.status(400).json({message: `Category with name ${label} already exist`})
             };

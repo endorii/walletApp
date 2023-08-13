@@ -16,14 +16,14 @@ router.post('/registration',
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()){
-                return res.status(400).json({message: 'Uncorrect request', errors})
+                return res.status(400).json({message: 'Невірний запит', errors})
             }
 
             const {email, password} = req.body;
 
             const candidate = await User.findOne({email});
             if (candidate){
-                return res.status(400).json({message: `User with email ${email} already exist`})
+                return res.status(400).json({message: `Користувач з поштою ${email} вже існує`})
             };
 
             const hashPassword = await bcrypt.hash(password, 8);
@@ -31,11 +31,11 @@ router.post('/registration',
             const user = new User({email, password: hashPassword});
 
             await user.save();
-            return res.json({message: "User was created"});
+            return res.json({message: "Користувача було створено"});
 
         } catch (e) {
             console.log(e);
-            res.send({message: "Server error"});
+            res.send({message: "Помилка сервера"});
         }
     }
 )
@@ -46,12 +46,12 @@ router.post('/login',
             const {email, password} = req.body;
             const user = await User.findOne({email})
             if (!user){
-                return res.status(404).json({message: "User not found"})
+                return res.status(404).json({message: "Користувача не знайдено"})
             }
 
             const isPassValid = bcrypt.compareSync(password, user.password)
             if (!isPassValid){
-                return res.status(400).json({message: "Invalid password"})
+                return res.status(400).json({message: "Невірний пароль"})
             }
 
             const token = jwt.sign({id: user.id}, config.get("secretKey"), {expiresIn: "1h"});
@@ -66,7 +66,7 @@ router.post('/login',
 
         } catch (e) {
             console.log(e);
-            res.send({message: "Server error"});
+            res.send({message: "Помилка сервера"});
         }
     }
 )
@@ -88,7 +88,7 @@ router.get('/auth', authMiddleware,
 
         } catch (e) {
             console.log(e);
-            res.send({message: "Server error"});
+            res.send({message: "Помилка сервера"});
         }
     }
 )

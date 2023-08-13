@@ -1,15 +1,29 @@
-import {AppBar, Box, Toolbar, Typography, IconButton} from '@mui/material';
+import {AppBar, Box, Toolbar, Typography, IconButton, Button, Modal} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SavingsIcon from '@mui/icons-material/Savings';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import { NavLink } from 'react-router-dom';
+import { logout } from '../../../../store/reducers/userSlice';
+import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
 
 const Header = () => {
+
+    const [open, setOpen] = useState(false);
+    const dispatch = useDispatch();
+
+    let navigate = useNavigate(); 
+
+    const routeChange = () =>{
+        let path = `/auth/login`; 
+        navigate(path);
+    }
     return (
-        <Box>
+        <Box sx={{}}>
             <Box>
                 <AppBar 
-                
                     position='fixed' 
                     sx={{
                         left: 0, 
@@ -17,6 +31,39 @@ const Header = () => {
                         width: '80px', 
                         display: 'flex', 
                         alignItems: 'center'}}>
+                    
+                    <Modal open={open}>
+                        <Box>
+                            <Box className="overlay"
+                            onClick={() => {setOpen(!open);}}
+                            sx={{
+                                position: "fixed",
+
+                                paddingTop: "100px",
+                                left: "0",
+                                top: "0",
+                                width: "100%",
+                                height: "100%",
+                                overflow: "auto",
+                                backgroundColor: "rgba(0,0,0,0.4)",
+                            }}
+                            >
+                                <Box className="modal" 
+                                sx={{
+                                    p: 7,
+                                    pt: 3,
+                                    position: 'relative', 
+                                    borderRadius: "5px", 
+                                    backgroundColor: "#fefefe",
+                                    margin: "auto",
+                                    border: "1px solid #888",
+                                    width: "50%"
+                                }}>
+                                    <Button onClick={() => {routeChange(); dispatch(logout())}}>Вийти</Button>
+                                </Box>
+                            </Box>
+                        </Box>
+                    </Modal>
 
                     <Toolbar 
                         sx={{
@@ -25,7 +72,20 @@ const Header = () => {
                             alignItems: 'center', 
                             justifyContent: 'center', 
                             gap: '10px', 
-                            mt: 10}}>
+                            mt: 2}}>
+                    
+                    
+
+                    <IconButton
+                        size="large"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{mb: 3, p: 0.5, }}
+                        onClick={() => setOpen(true)}
+                        >
+
+                        <MenuIcon />
+                    </IconButton>
                         
                         <NavLink 
                             to="/transactions" 

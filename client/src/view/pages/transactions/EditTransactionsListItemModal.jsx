@@ -13,6 +13,7 @@ const EditTransactionListItemModal = ({activeTransaction, activePaper, setActive
     const [transactionCategory, setTransactionCategory] = useState(activeTransaction.category);
     const [transactionDate, setTransactionDate] = useState(activeTransaction.date);
     const {categories} = useSelector(state => state.categories)
+    const {basicCategories} = useSelector(state => state.categories);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -36,12 +37,12 @@ const EditTransactionListItemModal = ({activeTransaction, activePaper, setActive
     return (
         <Box>
             <Button variant='outlined' color='success' onClick={() => setOpen(true)}>Змінити</Button>
+            
             {open ? 
             
             <Box
                 sx={{
-                    position: "fixed",
-                    zIndex: "2000",
+                    position: "absolute",
                     paddingTop: "100px",
                     left: "0",
                     top: "0",
@@ -70,18 +71,29 @@ const EditTransactionListItemModal = ({activeTransaction, activePaper, setActive
                     component="form"
                     autoComplete="off"
                     sx={{
+                        position: "relative",
                         mt: 3,
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: 'center',
                         gap: "10px",
                     }}>
+                        
+                        <TextField
+                            error={transactionName.length <= 2 || !transactionName}
+                            helperText={transactionName.length <= 2 ? 'Введіть більше 2-х символів' : null}
+                            value={transactionName} 
+                            onChange={e => setTransactionName(e.target.value)}
+                            required
+                            id="outlined-required"
+                            label="Назва"
+                            />
 
                         <Autocomplete
                             
                             disablePortal
                             id="combo-box-demo"
-                            options={categories}
+                            options={categories.concat(basicCategories)}
                             sx={{ width: 300 }}
                             value={transactionCategory}
                             onChange={(event, value) => {
@@ -108,7 +120,7 @@ const EditTransactionListItemModal = ({activeTransaction, activePaper, setActive
                         />
 
                         <TextField
-                            error={transactionDate.length <= 9 || !transactionName}
+                            error={transactionDate.length <= 9 || !transactionDate}
                             helperText={transactionDate.length <= 9 ? 'Введіть дату типу: "РРРР-ММ-ДД"' : null}
                             value={transactionDate} 
                             onChange={e => setTransactionDate(e.target.value)}
@@ -117,15 +129,7 @@ const EditTransactionListItemModal = ({activeTransaction, activePaper, setActive
                             label="Дата"
                             />
 
-                        <TextField
-                            error={transactionName.length <= 2 || !transactionName}
-                            helperText={transactionName.length <= 2 ? 'Введіть більше 2-х символів' : null}
-                            value={transactionName} 
-                            onChange={e => setTransactionName(e.target.value)}
-                            required
-                            id="outlined-required"
-                            label="Назва"
-                            />
+                        
 
                         <Button 
                             disabled={transactionName.length <= 2 || !transactionName || !transactionValue || !transactionCategory || transactionDate.length <= 9 || !transactionName}
@@ -136,7 +140,7 @@ const EditTransactionListItemModal = ({activeTransaction, activePaper, setActive
                             e.preventDefault();
                             editTransaction(activeTransaction._id);
                             setOpen(!open);
-                            setActivePaper(!activePaper);
+                            setActivePaper(false);
                             }
                         }>Редагувати</Button>   
                     

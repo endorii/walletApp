@@ -13,6 +13,7 @@ const BudgetInfo = () => {
 
     const dispatch = useDispatch();
     const {categories} = useSelector(state => state.categories);
+    const {basicCategories} = useSelector(state => state.categories);
     const {isLoading} = useSelector(state => state.categories)
     const {budget} = useSelector(state => state.budget)
     const [openCategoryList, setOpenCategoryList] = useState(true);
@@ -95,27 +96,15 @@ const BudgetInfo = () => {
                     pt: 3,
                     width: "45%",
                     mt: '1%'}}>
-
-                { isLoading ? <Loader/> : 
-                !categories || categories.length === 0 ? 
-
                 <Typography 
-                    sx={{
-                        textAlign: 'center', 
-                        fontSize: '40px', 
-                        fontWeight: '300', 
-                        mt: 3}}>
+                variant="h5" 
+                sx={{textAlign: 'center'}}>
+                
+                Список категорій</Typography>
 
-                Немає доступних категорій😢
-                </Typography> : 
+                { isLoading ? <Loader/> :  
 
                 <Box>
-                    <Typography 
-                        variant="h5" 
-                        sx={{textAlign: 'center'}}>
-                        
-                        Список категорій</Typography>
-
                     <Box>
                         {categories.map((category) => (
                         <Box key={category._id}
@@ -127,8 +116,10 @@ const BudgetInfo = () => {
                                         <ImageIcon />
                                     </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText 
-                                    primary={category.label} 
+                                <ListItemText sx={{
+                                    wordWrap: 'break-word'
+                                }}
+                                    primary={category.label.length > 50 ? `${category.label.slice(0, 50)}...` : category.label} 
                                     secondary={category.limit} />
 
                                 <Box 
@@ -147,9 +138,37 @@ const BudgetInfo = () => {
                                 component="hr" />
                         </Box>
                         ))}
+                        
                     </Box>
                 </Box>
                 }
+
+                {basicCategories ? (
+                    <Box>
+                    {basicCategories.map((category) => (
+                    <Box key={category.id}
+                        
+                    >
+                        <ListItem>
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <ImageIcon />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText sx={{
+                                wordWrap: 'break-word'
+                            }}
+                                primary={category.label} 
+                                secondary={category.limit} />
+                        </ListItem>
+                        <Divider 
+                            variant="middle" 
+                            component="hr" />
+                    </Box>
+                    ))}
+                    
+                </Box>
+                ) : null}
                 <IconButton
                     size="large"
                     color="inherit"
