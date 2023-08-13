@@ -11,11 +11,11 @@ const Registartion = () => {
     const [touchedEmail, setTouchedEmail] = useState(false);
     const [touchedPassword, setTouchedPassword] = useState(false);
 
-    let navigate = useNavigate(); 
-    const routeChange = () =>{ 
-    let path = `/auth/login`; 
-    navigate(path);
-    }
+    // let navigate = useNavigate(); 
+    // const routeChange = () =>{ 
+    // let path = `/auth/login`; 
+    // navigate(path);
+    // }
 
     return (
         <Box sx={{
@@ -60,7 +60,7 @@ const Registartion = () => {
                 disabled={password.length <= 3 || !password || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)}
                 variant="contained" 
                 color="success" 
-                onClick={() => {registration(email, password); routeChange()}}>Зареєструватися</Button>
+                onClick={() => {registration(email, password);}}>Зареєструватися</Button>
                 <Typography variant='h6' sx={{ fontWeight: 300, fontSize: "16px"}}>Вже маєте аккаунт? <Link href="/auth/login" underline="none">
                 {'Увійти'}
             </Link></Typography>

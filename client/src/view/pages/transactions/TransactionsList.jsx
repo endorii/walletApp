@@ -4,7 +4,6 @@ import { setDate } from '../../../store/reducers/dateSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import ImageIcon from '@mui/icons-material/Image';
 import CloseIcon from '@mui/icons-material/Close';
-import EditTransactionListItemModal from './EditTransactionsListItemModal';
 import DeleteTransactionsListItem from './DeleteTransactionsListItem';
 import Loader from '../../../modules/files/components/Loader/Loader';
 import { fetchTransactions } from "../../../store/reducers/transactionsSlice";
@@ -13,7 +12,7 @@ import { editTransactionItem } from '../../../modules/files/actions/transaction'
 
 const TransactionsList = () => {
 
-    const duration = 300;
+    const duration = 450;
 
     const defaultStyle = {
         transition: `all ${duration}ms ease-in-out`,
@@ -168,14 +167,7 @@ const TransactionsList = () => {
                         <Modal open={open}>
                         <Box
                         sx={{
-                            position: "absolute",
                             paddingTop: "100px",
-                            left: "0",
-                            top: "0",
-                            width: "100%",
-                            height: "100%",
-                            overflow: "auto",
-                            backgroundColor: "rgba(0,0,0,0.4)",
                         }}
                     >
                         <Box 

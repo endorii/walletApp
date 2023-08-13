@@ -67,14 +67,7 @@ const AddTransaction = () => {
             <Modal open={open}>
                 <Box 
                     sx={{
-                        position: "fixed",
                         paddingTop: "100px",
-                        left: "0",
-                        top: "0",
-                        width: "100%",
-                        height: "100%",
-                        overflow: "auto",
-                        backgroundColor: "rgba(0,0,0,0.4)",
                     }}
                 >
                     <Box 

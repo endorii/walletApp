@@ -8,9 +8,25 @@ import DeleteCategoryListItem from "./DeleteCategoryListItem";
 import { fetchBudget } from "../../../store/reducers/budgetSlice";
 import { fetchCategories } from "../../../store/reducers/categoriesSlice";
 import Loader from "../../../modules/files/components/Loader/Loader";
+import Transition from "react-transition-group/Transition";
 
 const BudgetInfo = () => {
+    const duration = 400;
 
+    const defaultStyle = {
+        transition: `all ${duration}ms ease-in-out`,
+        opacity: 1,
+        display: "block",
+        transform: 'translateY(0%)',
+    }
+    
+    const transitionStyles = {
+        entering: { display: "block", opacity: 0, transform: 'translateY(0%)' },
+        entered:  { display: "block", opacity: 1, transform: 'translateY(0%)' },
+        exiting:  { display: "block", opacity: 0, transform: 'translateY(-70%)' },
+        exited: { display: "none", opacity: 0, transform: 'translateY(-70%)' },
+    };
+    
     const dispatch = useDispatch();
     const {categories} = useSelector(state => state.categories);
     const {basicCategories} = useSelector(state => state.categories);
@@ -36,7 +52,8 @@ const BudgetInfo = () => {
                 sx={{
                     p: 7,
                     pt: 3,
-                    width: "45%"
+                    width: "45%",
+                    zIndex: 1,
             }}>
 
                 <Typography 
@@ -86,28 +103,73 @@ const BudgetInfo = () => {
                 </Box>
             
             </Paper>
-            {openCategoryList ? 
             
-            <Paper 
-                elevation={4} 
-                sx={{
-                    position: 'relative',  
-                    p: 7,
-                    pt: 3,
-                    width: "45%",
-                    mt: '1%'}}>
-                <Typography 
-                variant="h5" 
-                sx={{textAlign: 'center'}}>
-                
-                Список категорій</Typography>
-
-                { isLoading ? <Loader/> :  
-
-                <Box>
+            <Transition in={openCategoryList} timeout={duration}>
+                {state => (
+                    <Paper 
+                    elevation={4} 
+                    sx={{
+                        position: 'relative',  
+                        p: 7,
+                        pt: 3,
+                        width: "45%",
+                        zIndex: 0,
+                        mt: '1%'}}
+                        style={{
+                            ...defaultStyle,
+                            ...transitionStyles[state]
+                          }}>
+                    <Typography 
+                    variant="h5" 
+                    sx={{textAlign: 'center'}}>
+                    
+                    Список категорій</Typography>
+    
+                    { isLoading ? <Loader/> :  
+    
                     <Box>
-                        {categories.map((category) => (
-                        <Box key={category._id}
+                        <Box>
+                            {categories.map((category) => (
+                            <Box key={category._id}
+                                
+                            >
+                                <ListItem>
+                                    <ListItemAvatar>
+                                        <Avatar>
+                                            <ImageIcon />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText sx={{
+                                        wordWrap: 'break-word'
+                                    }}
+                                        primary={category.label.length > 50 ? `${category.label.slice(0, 50)}...` : category.label} 
+                                        secondary={category.limit} />
+    
+                                    <Box 
+                                        sx={{
+                                            display: 'flex', 
+                                            justifyContent: 'center', 
+                                            gap: '10px'}}>
+    
+                                        <EditCategoryListItemModal activeCategory={category}/>
+    
+                                        <DeleteCategoryListItem activeCategory={category}/>
+                                    </Box>
+                                </ListItem>
+                                <Divider 
+                                    variant="middle" 
+                                    component="hr" />
+                            </Box>
+                            ))}
+                            
+                        </Box>
+                    </Box>
+                    }
+    
+                    {basicCategories ? (
+                        <Box>
+                        {basicCategories.map((category) => (
+                        <Box key={category.id}
                             
                         >
                             <ListItem>
@@ -119,19 +181,8 @@ const BudgetInfo = () => {
                                 <ListItemText sx={{
                                     wordWrap: 'break-word'
                                 }}
-                                    primary={category.label.length > 50 ? `${category.label.slice(0, 50)}...` : category.label} 
+                                    primary={category.label} 
                                     secondary={category.limit} />
-
-                                <Box 
-                                    sx={{
-                                        display: 'flex', 
-                                        justifyContent: 'center', 
-                                        gap: '10px'}}>
-
-                                    <EditCategoryListItemModal activeCategory={category}/>
-
-                                    <DeleteCategoryListItem activeCategory={category}/>
-                                </Box>
                             </ListItem>
                             <Divider 
                                 variant="middle" 
@@ -140,50 +191,22 @@ const BudgetInfo = () => {
                         ))}
                         
                     </Box>
-                </Box>
-                }
-
-                {basicCategories ? (
-                    <Box>
-                    {basicCategories.map((category) => (
-                    <Box key={category.id}
-                        
-                    >
-                        <ListItem>
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <ImageIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText sx={{
-                                wordWrap: 'break-word'
-                            }}
-                                primary={category.label} 
-                                secondary={category.limit} />
-                        </ListItem>
-                        <Divider 
-                            variant="middle" 
-                            component="hr" />
-                    </Box>
-                    ))}
-                    
-                </Box>
-                ) : null}
-                <IconButton
-                    size="large"
-                    color="inherit"
-                    aria-label="menu"
-                    sx={{
-                        position: 'absolute', 
-                        top: 0, 
-                        left: 0}}
-                    onClick={() => {setOpenCategoryList(false)}}>
-                        
-                    <CloseIcon color="primary" />
-                </IconButton>
-            </Paper>
-            
-            : null}
+                    ) : null}
+                    <IconButton
+                        size="large"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{
+                            position: 'absolute', 
+                            top: 0, 
+                            left: 0}}
+                        onClick={() => {setOpenCategoryList(false)}}>
+                            
+                        <CloseIcon color="primary" />
+                    </IconButton>
+                </Paper>
+                )}
+            </Transition>
         </Box>
     )
 }
