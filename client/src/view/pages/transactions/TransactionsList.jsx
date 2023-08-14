@@ -9,6 +9,7 @@ import Loader from '../../../modules/files/components/Loader/Loader';
 import { fetchTransactions } from "../../../store/reducers/transactionsSlice";
 import Transition from 'react-transition-group/Transition';
 import { editTransactionItem } from '../../../modules/files/actions/transaction';
+import MonthPicker from '../../../modules/auth/components/MonthPicker/MonthPicker';
 
 const TransactionsList = () => {
     const nodeRef = useRef(null)
@@ -97,7 +98,7 @@ const TransactionsList = () => {
                     zIndex: 2
                 }}    
         >
-            <h1>тут має бути контейнер з вибором дати</h1>
+            <MonthPicker/>
 
             {isLoading ? <Loader/> : !transactions || transactions.length === 0 ? 
             <Typography sx={{textAlign: 'center', fontSize: '40px', fontWeight: '300', mt: 3}}>
@@ -105,37 +106,38 @@ const TransactionsList = () => {
             </Typography> : 
             
             <Box>
-                <Typography sx={{fontWeight: 700, fontSize: '24px', mb: 3, textAlign: 'center'}}>{date}</Typography>
-                <Divider variant="middle" component="hr" />
-                
-                {filteredDataOnMonthAndYear().map((transaction) => (
-
-                    <Box key={transaction._id} 
-                    onClick={() => {setActivePaper(true); setActiveTransaction(transaction)}}
-                    >
-                        <ListItem>
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <ImageIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText sx={{
-                                    wordWrap: 'break-word'
-                                }} 
-                                primary={transaction.category.length > 21 ? `${transaction.category.slice(0, 21)}...` : transaction.category} 
-                                secondary={transaction.name.length > 50 ? `${transaction.name.slice(0, 50)}...` : transaction.name} />
-                            <Typography sx={{p: 2, textAlign: "center"}}>
-                                {transaction.value} UAH
-                            </Typography>
-                        </ListItem>
-                        <Typography sx={{
-                            ml: 2, mb: 1, fontSize: "14px", color: "grey", fontWeight: 300
-                        }}>
-                            {formattedDate(transaction.date)}
+                <Divider sx={{mt:2}} variant="middle" component="hr" />
+                {filteredDataOnMonthAndYear().length <= 0 ? <Typography sx={{textAlign: 'center', fontSize: '40px', fontWeight: '300', mt: 3}}>
+                Немає доступних транзакцій 😢
+            </Typography> : 
+                filteredDataOnMonthAndYear().map((transaction) => (
+                <Box key={transaction._id} 
+                onClick={() => {setActivePaper(true); setActiveTransaction(transaction)}}
+                >
+                    <ListItem>
+                        <ListItemAvatar>
+                            <Avatar>
+                                <ImageIcon />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText sx={{
+                                wordWrap: 'break-word'
+                            }} 
+                            primary={transaction.category.length > 21 ? `${transaction.category.slice(0, 21)}...` : transaction.category} 
+                            secondary={transaction.name.length > 50 ? `${transaction.name.slice(0, 50)}...` : transaction.name} />
+                        <Typography sx={{p: 2, textAlign: "center"}}>
+                            {transaction.value} UAH
                         </Typography>
-                        <Divider variant="middle" component="hr" />
-                    </Box>
+                    </ListItem>
+                    <Typography sx={{
+                        ml: 2, mb: 1, fontSize: "14px", color: "grey", fontWeight: 300
+                    }}>
+                        {formattedDate(transaction.date)}
+                    </Typography>
+                    <Divider variant="middle" component="hr" />
+                </Box>
                 ))}
+                
             </Box>}
         </Paper>
 
