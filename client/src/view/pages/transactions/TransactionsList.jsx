@@ -1,5 +1,5 @@
 import { Box, Typography, Paper, ListItem, ListItemText, ListItemAvatar, Avatar, Divider, IconButton, TextField, Modal, Button, Autocomplete } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { setDate } from '../../../store/reducers/dateSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import ImageIcon from '@mui/icons-material/Image';
@@ -11,7 +11,7 @@ import Transition from 'react-transition-group/Transition';
 import { editTransactionItem } from '../../../modules/files/actions/transaction';
 
 const TransactionsList = () => {
-
+    const nodeRef = useRef(null)
     const duration = 450;
 
     const defaultStyle = {
@@ -139,7 +139,7 @@ const TransactionsList = () => {
             </Box>}
         </Paper>
 
-        <Transition in={activePaper} timeout={0}>
+        <Transition nodeRef={nodeRef} in={activePaper} timeout={0}>
             {state => (
                 <Paper
                 elevation={4}
@@ -210,7 +210,7 @@ const TransactionsList = () => {
                                 <Autocomplete
                                     disablePortal
                                     id="combo-box-demo"
-                                    options={categories.concat(basicCategories)}
+                                    options={categories && basicCategories ? categories.concat(basicCategories) : []}
                                     sx={{ width: 300 }}
                                     value={transactionCategory}
                                     onChange={(event, value) => {

@@ -70,7 +70,7 @@ const Login = () => {
                 color="success" 
                 onClick={async () => {
 
-                    dispatch(login(email, password));
+                    dispatch(login(email, password, routeChange));
 
                     if ( Object.keys(user).length > 0) {
                         routeChange();

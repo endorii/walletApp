@@ -1,6 +1,6 @@
 import { Typography, Box, Paper, Divider, Button, ListItem, ListItemText, ListItemAvatar, Avatar, IconButton } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ImageIcon from '@mui/icons-material/Image';
 import CloseIcon from '@mui/icons-material/Close';
 import EditCategoryListItemModal from "./EditCategoryListItemModal";
@@ -11,6 +11,7 @@ import Loader from "../../../modules/files/components/Loader/Loader";
 import Transition from "react-transition-group/Transition";
 
 const BudgetInfo = () => {
+    const nodeRef = useRef(null)
     const duration = 400;
 
     const defaultStyle = {
@@ -23,8 +24,8 @@ const BudgetInfo = () => {
     const transitionStyles = {
         entering: { display: "block", opacity: 0, transform: 'translateY(0%)' },
         entered:  { display: "block", opacity: 1, transform: 'translateY(0%)' },
-        exiting:  { display: "block", opacity: 0, transform: 'translateY(-70%)' },
-        exited: { display: "none", opacity: 0, transform: 'translateY(-70%)' },
+        exiting:  { display: "block", opacity: 0.3, transform: 'translateY(-80%)' },
+        exited: { display: "block", opacity: 0, transform: 'translateY(-80%)' },
     };
     
     const dispatch = useDispatch();
@@ -104,7 +105,7 @@ const BudgetInfo = () => {
             
             </Paper>
             
-            <Transition in={openCategoryList} timeout={duration}>
+            <Transition nodeRef={nodeRef} in={openCategoryList} timeout={duration}>
                 {state => (
                     <Paper 
                     elevation={4} 

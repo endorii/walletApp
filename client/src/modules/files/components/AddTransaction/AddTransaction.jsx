@@ -134,7 +134,7 @@ const AddTransaction = () => {
                             <Autocomplete
                                 disablePortal
                                 id="combo-box-demo"
-                                options={categories.concat(basicCategories)}
+                                options={categories && basicCategories ? categories.concat(basicCategories) : []}
                                 sx={{ width: 300 }}
                                 value={transactionCategory}
                                 onChange={(event, value) => {
