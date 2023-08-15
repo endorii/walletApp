@@ -1,4 +1,4 @@
-import { Typography, Box, Paper, Divider, Button, ListItem, ListItemText, ListItemAvatar, Avatar, IconButton } from "@mui/material";
+import { Typography, Box, Paper, Divider, Button, ListItem, ListItemText, ListItemAvatar, Avatar, IconButton, LinearProgress } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 import ImageIcon from '@mui/icons-material/Image';
@@ -9,8 +9,12 @@ import { fetchBudget } from "../../../store/reducers/budgetSlice";
 import { fetchCategories } from "../../../store/reducers/categoriesSlice";
 import Loader from "../../../modules/files/components/Loader/Loader";
 import Transition from "react-transition-group/Transition";
+import LinearProgressBar from "./LinearProgressBar";
 
 const BudgetInfo = () => {
+
+    const normalise = (value) => ((value - 0) * 100) / (100 - 0);
+
     const nodeRef = useRef(null)
     const duration = 400;
 
@@ -130,7 +134,7 @@ const BudgetInfo = () => {
     
                     <Box>
                         <Box>
-                            {categories.map((category) => (
+                            {categories? categories.map((category) => (
                             <Box key={category._id}
                                 
                             >
@@ -144,7 +148,8 @@ const BudgetInfo = () => {
                                         wordWrap: 'break-word'
                                     }}
                                         primary={category.label.length > 50 ? `${category.label.slice(0, 50)}...` : category.label} 
-                                        secondary={category.limit} />
+                                        secondary={`Ліміт коштів: ${category.limit}`} 
+                                        />
     
                                     <Box 
                                         sx={{
@@ -157,11 +162,14 @@ const BudgetInfo = () => {
                                         <DeleteCategoryListItem activeCategory={category}/>
                                     </Box>
                                 </ListItem>
+
+                                <LinearProgressBar category={category}/>
+
                                 <Divider 
                                     variant="middle" 
                                     component="hr" />
                             </Box>
-                            ))}
+                            )) : null}
                             
                         </Box>
                     </Box>
@@ -185,6 +193,9 @@ const BudgetInfo = () => {
                                     primary={category.label} 
                                     secondary={category.limit} />
                             </ListItem>
+                            
+                                {/* <LinearProgressBar category={category}/> */}
+
                             <Divider 
                                 variant="middle" 
                                 component="hr" />

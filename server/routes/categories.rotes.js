@@ -13,7 +13,7 @@ router.post('/categories', authMiddleware,
                 return res.status(400).json({message: `Category with name ${label} already exist`})
             };
 
-            const category = new Category({user: req.user.id, label, limit, type});
+            const category = new Category({user: req.user.id, label, limit, remainder: limit, type});
 
             await category.save();
             return res.json({message: "Category was added"});
@@ -47,7 +47,7 @@ router.put('/categories/:_id', authMiddleware,
 
             const updatedCategory = await Category.findOneAndUpdate(
                 { _id },
-                {user: req.user.id, label, limit, type },
+                {user: req.user.id, label, remainder: limit, limit, type },
                 { new: true }
             );
 

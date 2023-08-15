@@ -4,6 +4,7 @@ const Category = new Schema({
     user: { type: Schema.Types.ObjectId, ref: "User" },
     label: {type: String, required: true},
     limit: {type: Number, required: true},
+    remainder: {type: Number},
     type: {type: String, required: true}
 });
 
