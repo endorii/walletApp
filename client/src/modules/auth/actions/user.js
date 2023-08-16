@@ -6,6 +6,11 @@ import Swal from 'sweetalert2'
 export const registration = async (email, password, routeChange) => {
     try {
         const response = await axios.post("http://localhost:5000/api/auth/registration", {email, password});
+        Swal.fire({
+            title: response.data.message,
+            icon: 'success',
+            confirmButtonText: 'Продовжити'
+        })
         routeChange();
     } catch (e) {
         Swal.fire({
@@ -22,6 +27,11 @@ export const login = (email, password, routeChange) => {
             const response = await axios.post("http://localhost:5000/api/auth/login", {email, password});
             dispatch(setUser(response.data.user));
             localStorage.setItem('token', response.data.token);
+            Swal.fire({
+                title: response.data.message,
+                icon: 'success',
+                confirmButtonText: 'Продовжити'
+            })
             routeChange()
         } catch (e) {
             Swal.fire({
@@ -40,11 +50,6 @@ export const auth = () => {
             dispatch(setUser(response.data.user));
             localStorage.setItem('token', response.data.token);
         } catch (e) {
-            // Swal.fire({
-            //     title: e.response.data.message,
-            //     icon: 'warning',
-            //     confirmButtonText: 'Продовжити'
-            // })
             console.log(e.response);
             localStorage.removeItem('token');
         }       

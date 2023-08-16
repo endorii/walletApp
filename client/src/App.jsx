@@ -4,7 +4,7 @@ import { fetchCategories } from './store/reducers/categoriesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Header from './modules/files/components/Header/Header';
 import Transactions from './view/pages/transactions/Transactions';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 import Budget from './view/pages/budget/Budget';
 import Report from './view/pages/report/Report';
@@ -24,8 +24,6 @@ const App = () => {
     }
 
     useEffect(() => {
-        dispatch(fetchTransactions());
-        dispatch(fetchCategories());
         dispatch(auth())
 
         // dispatch(fetchBudget());
@@ -36,18 +34,18 @@ const App = () => {
         <Router>
             <Box className="App">
                 <HeaderWrapper />
-                {!isAuth && 
+                {isAuth === false && 
                 <Routes>
                     <Route path='/auth/login' element={<Login/>} />
                     <Route path='/auth/registration' element={<Registartion/>} />
                 </Routes>}
 
-                {isAuth ? 
+                {isAuth === true ? 
                 <Routes>
-                <Route path="/transactions" element={<Transactions/>}/>
-                <Route path="/report" element={<Report/>}/>
-                <Route path="/budget" element={<Budget/>}/>
-            </Routes> : null}
+                    <Route path="/transactions" element={<Transactions/>}/>
+                    <Route path="/report" element={<Report/>}/>
+                    <Route path="/budget" element={<Budget/>}/>
+                </Routes> : null}
             </Box>
         </Router>
     );

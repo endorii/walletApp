@@ -16,3 +16,7 @@ body {
 ul{
     list-style-type: decimal;
 }
+
+.swal2-container{
+    z-index: 1500;
+}

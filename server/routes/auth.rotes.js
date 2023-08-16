@@ -57,6 +57,7 @@ router.post('/login',
             const token = jwt.sign({id: user.id}, config.get("secretKey"), {expiresIn: "1h"});
 
             return res.json({
+                message: "Ви успішно увійшли в аккаунт!",
                 token,
                 user: {
                     id: user.id,
