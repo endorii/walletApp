@@ -18,7 +18,7 @@ const AddTransaction = () => {
     let formattedDate = year + '-' + month + '-' + day;
 
     const [transactionName, setTransactionName] = useState('');
-    const [transactionValue, setTransactionValue] = useState('');
+    const [transactionValue, setTransactionValue] = useState(null);
     const [transactionCategory, setTransactionCategory] = useState('');
     const [transactionDate, setTransactionDate] = useState(formattedDate);
 
@@ -26,6 +26,8 @@ const AddTransaction = () => {
     const [touchedTransactionValue, setTouchedTransactionValue] = useState(false);
     const [touchedTransactionCategory, setTouchedTransactionCategory] = useState(false);
     const [touchedTransactionDate, setTouchedTransactionDate] = useState(false);
+
+    const [fullTransactionCategory, setFullTransactionCategory] = useState('');
     
     const [open, setOpen] = useState(false);
 
@@ -37,7 +39,7 @@ const AddTransaction = () => {
 
     const clearForm = () => {
         setTransactionName('');
-        setTransactionValue('');
+        setTransactionValue(null);
         setTransactionCategory('');
         setTransactionDate(formattedDate);
         setOpen(false);
@@ -119,18 +121,6 @@ const AddTransaction = () => {
                                 label="Назва"
                                 />
 
-                            <TextField
-                                type="number"
-                                error={touchedTransactionValue && !transactionValue}
-                                helperText={touchedTransactionValue && !transactionValue ? 'Введіть значення' : null}
-                                value={transactionValue} 
-                                onBlur={() => setTouchedTransactionValue(true)}
-                                onChange={e => setTransactionValue(e.target.value)}
-                                required
-                                id="outlined-required"
-                                label="Значення"
-                                />
-
                             <Autocomplete
                                 disablePortal
                                 id="combo-box-demo"
@@ -139,16 +129,25 @@ const AddTransaction = () => {
                                 value={transactionCategory}
                                 onChange={(event, value) => {
                                     setTransactionCategory(value ? value.label : "");
-                                    if (value && value.type === "Витрати") {
-                                    setTransactionValue(-transactionValue);
-                                    } else {
-                                    setTransactionValue(transactionValue);
-                                    }
+                                    setFullTransactionCategory(value);
                                 }}
                                 renderInput={(params) => <TextField onBlur={() => setTouchedTransactionCategory(true)} {...params} error={touchedTransactionCategory && (!transactionCategory.toString())}
                                 helperText={touchedTransactionCategory && !transactionCategory ? 'Виберіть категорію' : null}
                                 label="Категорія" />}
                             />
+
+                            <TextField
+                                type="number"
+                                error={touchedTransactionValue && !transactionValue}
+                                disabled={!transactionCategory}
+                                helperText={touchedTransactionValue && !transactionValue ? 'Введіть значення' : null}
+                                value={fullTransactionCategory.type === "Прибуток" ? Math.abs(transactionValue) : -Math.abs(transactionValue)} 
+                                onBlur={(e) => {setTouchedTransactionValue(true); setTransactionValue(e.target.value)}}
+                                onChange={e => setTransactionValue(e.target.value)}
+                                required
+                                id="outlined-required"
+                                label="Значення"
+                                />
 
                             <TextField
                                 error={touchedTransactionDate && (transactionDate.length <= 9 || !transactionDate)}

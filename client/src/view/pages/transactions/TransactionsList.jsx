@@ -79,6 +79,8 @@ const TransactionsList = () => {
         }
     };
 
+    const [fullTransactionCategory, setFullTransactionCategory] = useState('');
+
     useEffect(() => {
         dispatch(fetchTransactions());
         setTransactionName(activeTransaction.name);
@@ -217,21 +219,18 @@ const TransactionsList = () => {
                                     value={transactionCategory}
                                     onChange={(event, value) => {
                                         setTransactionCategory(value ? value.label : "");
-                                        if (value && value.type === "Витрати") {
-                                          setTransactionValue(-Math.abs(transactionValue));
-                                        } else {
-                                          setTransactionValue(Math.abs(transactionValue));
-                                        }
+                                        setFullTransactionCategory(value);
                                     }}
                                     renderInput={(params) => <TextField {...params} error={!transactionCategory || !transactionCategory.toString()} helperText={!transactionCategory ? 'Виберіть категорію' : null}
                                     label="Категорія" />}
                                 />
-        
+
                                 <TextField
                                     type="number"
                                     error={!transactionValue}
                                     helperText={!transactionValue ? 'Введіть значення' : null}
-                                    value={transactionValue} 
+                                    value={fullTransactionCategory.type === "Прибуток" ? Math.abs(transactionValue) : -Math.abs(transactionValue)} 
+                                    onBlur={e => setTransactionValue(e.target.value)}
                                     onChange={e => setTransactionValue(e.target.value)}
                                     required
                                     id="outlined-required"

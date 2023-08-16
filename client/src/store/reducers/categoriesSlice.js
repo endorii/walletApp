@@ -13,7 +13,7 @@ const initialState = {
             id: 2,
             label: "Зарплата",
             limit: 0,
-            type: "Прибутки",
+            type: "Прибуток",
         },
     ],
     categories: [],

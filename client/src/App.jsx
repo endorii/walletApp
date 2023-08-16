@@ -24,7 +24,9 @@ const App = () => {
     }
 
     useEffect(() => {
-        dispatch(auth())
+        dispatch(auth());
+        dispatch(fetchTransactions());
+        dispatch(fetchCategories());
 
         // dispatch(fetchBudget());
         // dispatch(fetchStartBudget());
