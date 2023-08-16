@@ -30,21 +30,19 @@ export default function LinearProgressBar({category}) {
 
     const normalise = (value) => ((value - MIN) * 100) / (MAX - MIN);
 
-    console.log(category.remainder, total, category.limit);
-
     return (
         <Box sx={{ width: '100%', mb: 2 }}>
             <LinearProgressWithLabel
                 color={
-                    normalise(category.remainder + total) <= 10
+                    normalise(category.limit + total) <= 10
                     ? "error"
                     : "primary"
                 }
-                value={normalise(category.remainder + total)}
+                value={normalise(category.limit + total)}
             />
 
             <Typography sx={{ml: 1}} variant="body2" color="text.secondary">
-                {"Залишилося: " + Math.round(category.remainder + total)}
+                {"Залишилося: " + Math.round(category.limit + total)}
             </Typography>
         </Box>
     );
