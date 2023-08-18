@@ -1,11 +1,10 @@
-import { Box, Typography, AppBar, Toolbar, Button } from "@mui/material";
+import { Box, AppBar, Toolbar, ListItemText, ListItem } from "@mui/material";
 import BudgetInfo from "./ButgetInfo";
-
 import AddCategory from "../../../modules/files/components/AddCategory/AddCategory";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { fetchCategories } from "../../../store/reducers/categoriesSlice";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const Budget = () => {
 
@@ -17,10 +16,8 @@ const Budget = () => {
         dispatch(fetchCategories())
     }, [])
 
-
-
     return(
-        <Box>
+        <Box >
             <Box>
                 <AppBar sx={{zIndex: 1000}}
                     position="fixed">
@@ -29,13 +26,11 @@ const Budget = () => {
                         p: 0, 
                         flexGrow: 1}}>
                         
-                        <Typography
-                            sx={{ 
-                                ml: 12, 
-                                flexGrow: 1}}>
-
-                            {email}
-                        </Typography>
+                        <ListItem sx={{ ml: 12, flexGrow: 1}}>
+                                <AccountCircleIcon sx={{ height: '30px', width: '30px' }}/>
+                                <ListItemText sx={{ml: 1}}
+                            primary={email}/>
+                        </ListItem>
                         
                         <AddCategory />
                         

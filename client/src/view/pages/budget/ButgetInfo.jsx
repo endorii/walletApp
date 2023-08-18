@@ -1,20 +1,19 @@
-import { Typography, Box, Paper, Divider, Button, ListItem, ListItemText, ListItemAvatar, Avatar, IconButton, LinearProgress } from "@mui/material";
+import { Typography, Box, Paper, Divider, Button, ListItem, ListItemText, ListItemAvatar, Avatar, IconButton } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState, useRef } from "react";
-import ImageIcon from '@mui/icons-material/Image';
 import CloseIcon from '@mui/icons-material/Close';
 import EditCategoryListItemModal from "./EditCategoryListItemModal";
 import DeleteCategoryListItem from "./DeleteCategoryListItem";
-import { fetchBudget } from "../../../store/reducers/budgetSlice";
+// import { fetchBudget } from "../../../store/reducers/budgetSlice";
 import { fetchCategories } from "../../../store/reducers/categoriesSlice";
 import Loader from "../../../modules/files/components/Loader/Loader";
 import Transition from "react-transition-group/Transition";
 import LinearProgressBar from "./LinearProgressBar";
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 const BudgetInfo = () => {
-
-    const normalise = (value) => ((value - 0) * 100) / (100 - 0);
-
     const nodeRef = useRef(null)
     const duration = 400;
 
@@ -29,7 +28,7 @@ const BudgetInfo = () => {
         entering: { display: "block", opacity: 0, transform: 'translateY(0%)' },
         entered:  { display: "block", opacity: 1, transform: 'translateY(0%)' },
         exiting:  { display: "block", opacity: 0.3, transform: 'translateY(-80%)' },
-        exited: { display: "block", opacity: 0, transform: 'translateY(-80%)' },
+        exited: { display: "none", opacity: 0, transform: 'translateY(-80%)' },
     };
     
     const dispatch = useDispatch();
@@ -41,8 +40,8 @@ const BudgetInfo = () => {
 
     useEffect(() => {
         dispatch(fetchCategories());
-        dispatch(fetchBudget());
-    }, [fetchBudget])
+        // dispatch(fetchBudget());
+    }, [])
 
     return (
         <Box
@@ -139,12 +138,14 @@ const BudgetInfo = () => {
                                 
                             >
                                 <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar>
-                                            <ImageIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
+                                    {category.type === 'Прибуток' ? 
+                                        <Avatar sx={{ bgcolor: '#17B2001C' }}>
+                                            <KeyboardArrowUpIcon color='success'/>
+                                        </Avatar> : <Avatar sx={{ bgcolor: '#B200001C' }}>
+                                            <KeyboardArrowDownIcon color='error'/>
+                                        </Avatar>}
                                     <ListItemText sx={{
+                                        ml: 2,
                                         wordWrap: 'break-word'
                                     }}
                                         primary={category.label.length > 50 ? `${category.label.slice(0, 50)}...` : category.label} 
@@ -183,9 +184,9 @@ const BudgetInfo = () => {
                         >
                             <ListItem>
                                 <ListItemAvatar>
-                                    <Avatar>
-                                        <ImageIcon />
-                                    </Avatar>
+                                <Avatar sx={{ bgcolor: '#FFA70030' }}>
+                                    <RemoveIcon sx={{ color: '#FFA700' }}/>
+                                </Avatar>
                                 </ListItemAvatar>
                                 <ListItemText sx={{
                                     wordWrap: 'break-word'

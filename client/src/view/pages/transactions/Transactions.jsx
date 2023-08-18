@@ -1,10 +1,10 @@
 import TransactionsList from "./TransactionsList";
 import { useSelector, useDispatch } from "react-redux";
-import { Box, AppBar, Toolbar, Typography, IconButton } from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
+import { Box, AppBar, Toolbar, ListItemText, ListItem } from "@mui/material";
 import AddTransaction from "../../../modules/files/components/AddTransaction/AddTransaction";
 import { useEffect } from "react";
 import { fetchTransactions } from "../../../store/reducers/transactionsSlice";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const Transactions = () => {
 
@@ -12,7 +12,7 @@ const Transactions = () => {
     const {email} = useSelector(state => state.user.user)
 
     useEffect(()=> {
-        dispatch(fetchTransactions())
+        dispatch(fetchTransactions());
     }, [])
 
     return(
@@ -23,11 +23,13 @@ const Transactions = () => {
                     position="fixed"
                     >
                     <Toolbar sx={{p: 0, flexGrow: 1}}>
+
+                        <ListItem sx={{ ml: 12, flexGrow: 1}}>
+                                <AccountCircleIcon sx={{ height: '30px', width: '30px' }}/>
+                                <ListItemText sx={{ml: 1}}
+                            primary={email}/>
+                        </ListItem>
                         
-                        <Typography
-                            sx={{ ml: 12, flexGrow: 1}}>
-                            {email}
-                        </Typography>
                         
                         <AddTransaction />
                         

@@ -1,13 +1,8 @@
-import {AppBar, Box, Toolbar, Typography, IconButton, Button, Modal} from '@mui/material';
-
+import { AppBar, Box, Toolbar, Typography, IconButton } from '@mui/material';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SavingsIcon from '@mui/icons-material/Savings';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import { NavLink } from 'react-router-dom';
-
-import { useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from 'react-redux';
 import MenuComponent from '../MenuComponent/MenuComponent';
 
 const Header = () => {

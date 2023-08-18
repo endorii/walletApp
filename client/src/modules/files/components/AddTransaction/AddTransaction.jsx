@@ -57,7 +57,7 @@ const AddTransaction = () => {
     }
     
     return (
-        <Box sx={{}}>
+        <Box>
             <Button     
                 onClick={() => setOpen(!open)}
                 color="inherit" 

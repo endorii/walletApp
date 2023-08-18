@@ -1,8 +1,9 @@
 import { Box, Typography, Paper, ListItem, ListItemText, ListItemAvatar, Avatar, Divider, IconButton, TextField, Modal, Button, Autocomplete } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
-import { setDate } from '../../../store/reducers/dateSlice';
+// import { setDate } from '../../../store/reducers/dateSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import ImageIcon from '@mui/icons-material/Image';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteTransactionsListItem from './DeleteTransactionsListItem';
 import Loader from '../../../modules/files/components/Loader/Loader';
@@ -79,8 +80,6 @@ const TransactionsList = () => {
         }
     };
 
-    const [fullTransactionCategory, setFullTransactionCategory] = useState('');
-
     useEffect(() => {
         dispatch(fetchTransactions());
         setTransactionName(activeTransaction.name);
@@ -118,9 +117,12 @@ const TransactionsList = () => {
                 >
                     <ListItem>
                         <ListItemAvatar>
-                            <Avatar>
-                                <ImageIcon />
-                            </Avatar>
+                            {transaction.value >= 0 ? 
+                            <Avatar sx={{ bgcolor: '#17B2001C' }}>
+                                <KeyboardArrowUpIcon color='success'/>
+                            </Avatar> : <Avatar sx={{ bgcolor: '#B200001C' }}>
+                                <KeyboardArrowDownIcon color='error'/>
+                            </Avatar>}
                         </ListItemAvatar>
                         <ListItemText sx={{
                                 wordWrap: 'break-word'
@@ -219,7 +221,6 @@ const TransactionsList = () => {
                                     value={transactionCategory}
                                     onChange={(event, value) => {
                                         setTransactionCategory(value ? value.label : "");
-                                        setFullTransactionCategory(value);
                                     }}
                                     renderInput={(params) => <TextField {...params} error={!transactionCategory || !transactionCategory.toString()} helperText={!transactionCategory ? 'Виберіть категорію' : null}
                                     label="Категорія" />}
@@ -229,7 +230,7 @@ const TransactionsList = () => {
                                     type="number"
                                     error={!transactionValue}
                                     helperText={!transactionValue ? 'Введіть значення' : null}
-                                    value={fullTransactionCategory.type === "Прибуток" ? Math.abs(transactionValue) : -Math.abs(transactionValue)} 
+                                    value={transactionValue}
                                     onBlur={e => setTransactionValue(e.target.value)}
                                     onChange={e => setTransactionValue(e.target.value)}
                                     required
@@ -274,10 +275,7 @@ const TransactionsList = () => {
                         </Box>
                     </Box>
                         </Modal>
-                        
-
-                        {/* <EditTransactionListItemModal activeTransaction={activeTransaction} activePaper={activePaper} setActivePaper={setActivePaper}/> */}
-
+                    
                         <DeleteTransactionsListItem activeTransaction={activeTransaction} activePaper={activePaper} setActivePaper={setActivePaper}/>
                     </Box>
 
@@ -294,11 +292,12 @@ const TransactionsList = () => {
                 <Divider variant="middle" component="hr" />
                 <Box>
                     <ListItem>
-                        <ListItemAvatar>
-                            <Avatar>
-                                <ImageIcon />
-                            </Avatar>
-                        </ListItemAvatar>
+                    {activeTransaction.value >= 0 ? 
+                            <Avatar sx={{ bgcolor: '#17B2001C' }}>
+                            <KeyboardArrowUpIcon color='success'/>
+                        </Avatar> : <Avatar sx={{ bgcolor: '#B200001C' }}>
+                                <KeyboardArrowDownIcon color='error'/>
+                            </Avatar>}
                         <ListItemText 
                             sx={{wordWrap: 'break-word', p: 2}} 
                             primary={activeTransaction.category} 
