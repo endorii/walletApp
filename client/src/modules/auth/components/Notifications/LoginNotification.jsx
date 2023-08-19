@@ -1,7 +1,7 @@
-
+import { Typography } from "@mui/material";
 
 const LoginNotification = (message) => {
-    <h1>{message}</h1>
+    <Typography variant="h2">{message}</Typography>
 }
 
 export default LoginNotification;

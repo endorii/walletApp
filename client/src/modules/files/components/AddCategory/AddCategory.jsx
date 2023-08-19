@@ -6,6 +6,8 @@ import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { addCategory } from "../../actions/category";
 
+import { AddCategoryMainButtonStyles, AddCategoryWrapperStyles, AddCategorySubWrapperStyles, AddCategoryTextStyles, AddCategoryFormStyles, AddCategoryAutocompleteStyles, AddCategoryCloseIconStyles } from "./styles";
+
 const AddCategory = () => {
     const [open, setOpen] = useState(false);
     const [category, setCategory] = useState('');
@@ -43,35 +45,20 @@ const AddCategory = () => {
                 onClick={() => setOpen(!open)}
                 color="inherit" 
                 variant='contained' 
-                sx={{mr: 20, color: 'black'}}
+                sx={AddCategoryMainButtonStyles}
                 endIcon={<AddIcon />}
             >Додати категорію</Button>
 
         <Modal open={open}>
             <Box 
-                sx={{
-                    paddingTop: "100px",
-                }}>
+                sx={AddCategoryWrapperStyles}>
 
                 <Box 
-                    sx={{
-                        p: 7,
-                        pt: 3,
-                        position: 'relative', 
-                        borderRadius: "5px", 
-                        backgroundColor: "#fefefe",
-                        margin: "auto",
-                        border: "1px solid #888",
-                        width: "50%"
-                    }}>
+                    sx={AddCategorySubWrapperStyles}>
                     
                     <Typography 
                         color='primary' 
-                        sx={{
-                            mb: 2, 
-                            fontSize: "30px", 
-                            fontWeight: 'bold', 
-                            textAlign: 'center'}}>
+                        sx={AddCategoryTextStyles}>
 
                         Додати категорію
                     </Typography>
@@ -83,13 +70,7 @@ const AddCategory = () => {
                     <Box 
                         component="form"
                         autoComplete="off"
-                        sx={{
-                            mt: 3,
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: 'center',
-                            gap: "10px",
-                        }}
+                        sx={AddCategoryFormStyles}
                     >
                         <TextField
                             error={touchedCategory && (category.length <= 2 || !category)}
@@ -106,7 +87,7 @@ const AddCategory = () => {
                             disablePortal
                             id="combo-box-demo"
                             options={["Витрати", "Прибуток"]}
-                            sx={{ width: 250 }}
+                            sx={AddCategoryAutocompleteStyles}
                             value={type}
                             onChange={(event, value) => {setType(value)}}
                             renderInput={(params) => <TextField onBlur={() => setTouchedType(true)} {...params} error={touchedType && !type}
@@ -144,7 +125,7 @@ const AddCategory = () => {
                         size="large"
                         color="inherit"
                         aria-label="menu"
-                        sx={{position: 'absolute', top: -5, right: -5}}
+                        sx={AddCategoryCloseIconStyles}
                         onClick={() => setOpen(!open)}>
                             
                         <CloseIcon color="primary" />

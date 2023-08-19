@@ -2,7 +2,6 @@ import axios from "axios";
 import { setUser } from "../../../store/reducers/userSlice";
 import Swal from 'sweetalert2'
 
-
 export const registration = async (email, password, routeChange) => {
     try {
         const response = await axios.post("http://localhost:5000/api/auth/registration", {email, password});

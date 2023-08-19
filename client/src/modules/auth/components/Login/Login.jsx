@@ -1,8 +1,9 @@
-import { Box, Button, TextField, Typography, Link } from '@mui/material';
+import { Button, TextField, Typography, Link, Paper } from '@mui/material';
 import { useState } from 'react';
 import { login } from '../../actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { LoginPaperStyles, LoginSubtitleTextStyles, LoginEmailStyles, LoginPasswordStyles, LoginNoAccountStyles } from './styles';
 
 const Login = () => {
 
@@ -22,43 +23,27 @@ const Login = () => {
     }
 
     return (
-        <Box sx={{
-            margin: "10% auto",
-            width: "40%",
-            backgroundColor: "#fff",
-            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-            borderRadius: "10px",
-            padding: "50px",
-            height: "auto",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "15px"
-        }}>
+        <Paper elevation={4} sx={LoginPaperStyles}>
             <Typography variant='h2'>Вхід</Typography>
-            <Typography variant='h6' sx={{ fontWeight: 300, fontSize: "18px"}}>За допомогою аккаунту Wallet</Typography>
+            <Typography variant='h6' sx={LoginSubtitleTextStyles}>За допомогою аккаунту Wallet</Typography>
 
             <TextField 
                 onBlur={() => setTouchedEmail(true)}
-                sx={{maxWidth: "300px",}}
+                sx={LoginEmailStyles}
                 fullWidth
                 error={touchedEmail && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)}
                 helperText={touchedEmail && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email) ? 'Введіть правильний email' : null}
-
                 onChange={e => setEmail(e.target.value)}
                 value={email}
                 type="text" 
                 placeholder='Email' />
 
-
             <TextField
                 onBlur={() => setTouchedPassword(true)}
-                sx={{maxWidth: "300px",}}
+                sx={LoginPasswordStyles}
                 fullWidth
                 error={touchedPassword && (password.length <= 3 || !password)}
                 helperText={touchedPassword && (!password || password.length <= 3) ? 'Пароль повинен містити більше 3 символів' : null}
-                
                 onChange={e => setPassword(e.target.value)}
                 value={password}
                 type="password" 
@@ -69,17 +54,15 @@ const Login = () => {
                 variant="contained" 
                 color="success" 
                 onClick={async () => {
-
                     dispatch(login(email, password, routeChange));
-
                     if ( Object.keys(user).length > 0) {
                         routeChange();
                     }
                 }} >Вхід</Button>
-            <Typography variant='h6' sx={{ fontWeight: 300, fontSize: "16px"}}>Не маєте аккаунту? <Link href="/auth/registration" underline="none">
+            <Typography variant='h6' sx={LoginNoAccountStyles}>Не маєте аккаунту? <Link href="/auth/registration" underline="none">
                 {'Зареєструватися'}
             </Link></Typography>
-        </Box>
+        </Paper>
     );
 };
 

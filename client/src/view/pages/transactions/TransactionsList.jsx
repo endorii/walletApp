@@ -1,6 +1,5 @@
 import { Box, Typography, Paper, ListItem, ListItemText, ListItemAvatar, Avatar, Divider, IconButton, TextField, Modal, Button, Autocomplete } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
-// import { setDate } from '../../../store/reducers/dateSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -11,6 +10,7 @@ import { fetchTransactions } from "../../../store/reducers/transactionsSlice";
 import Transition from 'react-transition-group/Transition';
 import { editTransactionItem } from '../../../modules/files/actions/transaction';
 import MonthPicker from '../../../modules/auth/components/MonthPicker/MonthPicker';
+import { AutocompleteStyles, AvatarErrorStyles, AvatarSuccessStyles, CloseIconStyles, FormattedDateStyles, TransactionsListActiveButtonsWrapperStyles, TransactionsListActiveInfoTextStyles, TransactionsListActiveInsideStyles, TransactionsListActiveModalFormStyles, TransactionsListActiveModalStyles, TransactionsListActiveModalTextStyles, TransactionsListActivePaperStyles, TransactionsListListItemTextStyles, TransactionsListPaperStyles, TransactionsListTextNoTransactionsStyles, TransactionsListWrapperStyles, ValueStyles } from './styles';
 
 const TransactionsList = () => {
     const nodeRef = useRef(null)
@@ -89,26 +89,21 @@ const TransactionsList = () => {
     }, [activeTransaction]);
 
     return (
-        <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '2%'}}>
+        <Box sx={TransactionsListWrapperStyles}>
             <Paper 
                 elevation={4}
-                sx={{
-                    p: 7,
-                    pt: 3,
-                    width: "45%",
-                    zIndex: 2
-                }}    
+                sx={TransactionsListPaperStyles}    
         >
             <MonthPicker/>
 
             {isLoading ? <Loader/> : !transactions || transactions.length === 0 ? 
-            <Typography sx={{textAlign: 'center', fontSize: '40px', fontWeight: '300', mt: 3}}>
+            <Typography sx={TransactionsListTextNoTransactionsStyles}>
                 Немає доступних транзакцій 😢
             </Typography> : 
             
             <Box>
-                <Divider sx={{mt:2}} variant="middle" component="hr" />
-                {filteredDataOnMonthAndYear().length <= 0 ? <Typography sx={{textAlign: 'center', fontSize: '40px', fontWeight: '300', mt: 3}}>
+                <Divider mt={2} variant="middle" component="hr" />
+                {filteredDataOnMonthAndYear().length <= 0 ? <Typography sx={TransactionsListTextNoTransactionsStyles}>
                 Немає доступних транзакцій 😢
             </Typography> : 
                 filteredDataOnMonthAndYear().map((transaction) => (
@@ -118,24 +113,20 @@ const TransactionsList = () => {
                     <ListItem>
                         <ListItemAvatar>
                             {transaction.value >= 0 ? 
-                            <Avatar sx={{ bgcolor: '#17B2001C' }}>
+                            <Avatar sx={AvatarSuccessStyles}>
                                 <KeyboardArrowUpIcon color='success'/>
-                            </Avatar> : <Avatar sx={{ bgcolor: '#B200001C' }}>
+                            </Avatar> : <Avatar sx={AvatarErrorStyles}>
                                 <KeyboardArrowDownIcon color='error'/>
                             </Avatar>}
                         </ListItemAvatar>
-                        <ListItemText sx={{
-                                wordWrap: 'break-word'
-                            }} 
+                        <ListItemText sx={TransactionsListListItemTextStyles} 
                             primary={transaction.category.length > 21 ? `${transaction.category.slice(0, 21)}...` : transaction.category} 
                             secondary={transaction.name.length > 50 ? `${transaction.name.slice(0, 50)}...` : transaction.name} />
-                        <Typography sx={{p: 2, textAlign: "center"}}>
+                        <Typography sx={ValueStyles}>
                             {transaction.value} UAH
                         </Typography>
                     </ListItem>
-                    <Typography sx={{
-                        ml: 2, mb: 1, fontSize: "14px", color: "grey", fontWeight: 300
-                    }}>
+                    <Typography sx={FormattedDateStyles}>
                         {formattedDate(transaction.date)}
                     </Typography>
                     <Divider variant="middle" component="hr" />
@@ -149,141 +140,115 @@ const TransactionsList = () => {
             {state => (
                 <Paper
                 elevation={4}
-                sx={{
-                    p: 7,
-                    pt: 3,
-                    width: "45%",
-                    zIndex: 1
-                }}  
+                sx={TransactionsListActivePaperStyles}  
                 style={{
                     ...defaultStyle,
                     ...transitionStyles[state]
                   }}
-            >
-                <Box
-                    sx={{display: 'flex', justifyContent: 'space-between', mb: 2}}
-                >
+                >   
+                    <Box
+                        sx={TransactionsListActiveInsideStyles}
+                    >
                     <Typography 
-                        sx={{fontSize: '24px', fontWeight: 400}}
-                    >Інформація про транзакцію</Typography>
-                    <Box sx={{display: 'flex', justifyContent: 'center', gap: '10px'}}>
+                        sx={TransactionsListActiveInfoTextStyles}>
 
-                    <Button variant='outlined' color='success' onClick={() => setOpen(true)}>Змінити</Button>
+                        Інформація про транзакцію
+                    </Typography>
+                    <Box sx={TransactionsListActiveButtonsWrapperStyles}>
+
+                        <Button variant='outlined' color='success' onClick={() => setOpen(true)}>Змінити</Button>
+
+                        <DeleteTransactionsListItem activeTransaction={activeTransaction} activePaper={activePaper} setActivePaper={setActivePaper}/>
 
                         <Modal open={open}>
-                        <Box
-                        sx={{
-                            paddingTop: "100px",
-                        }}
-                    >
-                        <Box 
-                        sx={{
-                            p: 7,
-                            pt: 3,
-                            position: 'relative', 
-                            borderRadius: "5px", 
-                            backgroundColor: "#fefefe",
-                            margin: "auto",
-                            border: "1px solid #888",
-                            width: "50%"
-                        }}>
-                            <Typography color='primary' sx={{fontSize: "30px", fontWeight: 'bold', textAlign: 'center'}}>
-                                Змінити транзакцію
-                            </Typography>
-                                            
-                            <Box 
-                            component="form"
-                            autoComplete="off"
-                            sx={{
-                                position: "relative",
-                                mt: 3,
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: 'center',
-                                gap: "10px",
-                            }}>
+                            <Box sx={TransactionsListActiveModalStyles}>
+                                <Typography color='primary' sx={TransactionsListActiveModalTextStyles}>
+                                    Змінити транзакцію
+                                </Typography>
+                                                
+                                <Box 
+                                    component="form"
+                                    autoComplete="off"
+                                    sx={TransactionsListActiveModalFormStyles}>
 
-                                <TextField
-                                    error={!transactionName || transactionName.length <= 2}
-                                    helperText={!transactionName || transactionName.length <= 2 ? 'Введіть більше 2-х символів' : null}
-                                    value={transactionName} 
-                                    onChange={e => setTransactionName(e.target.value)}
-                                    required
-                                    id="outlined-required"
-                                    label="Назва"
+                                    <TextField
+                                        error={!transactionName || transactionName.length <= 2}
+                                        helperText={!transactionName || transactionName.length <= 2 ? 'Введіть більше 2-х символів' : null}
+                                        value={transactionName} 
+                                        onChange={e => setTransactionName(e.target.value)}
+                                        required
+                                        id="outlined-required"
+                                        label="Назва"
+                                        />
+            
+                                    <Autocomplete
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        options={categories && basicCategories ? categories.concat(basicCategories) : []}
+                                        sx={AutocompleteStyles}
+                                        value={transactionCategory}
+                                        onChange={(event, value) => {
+                                            setTransactionCategory(value ? value.label : "");
+                                        }}
+                                        renderInput={(params) => <TextField {...params} error={!transactionCategory || !transactionCategory.toString()} helperText={!transactionCategory ? 'Виберіть категорію' : null}
+                                        label="Категорія" />}
                                     />
-        
-                                <Autocomplete
-                                    disablePortal
-                                    id="combo-box-demo"
-                                    options={categories && basicCategories ? categories.concat(basicCategories) : []}
-                                    sx={{ width: 300 }}
-                                    value={transactionCategory}
-                                    onChange={(event, value) => {
-                                        setTransactionCategory(value ? value.label : "");
-                                    }}
-                                    renderInput={(params) => <TextField {...params} error={!transactionCategory || !transactionCategory.toString()} helperText={!transactionCategory ? 'Виберіть категорію' : null}
-                                    label="Категорія" />}
-                                />
 
-                                <TextField
-                                    type="number"
-                                    error={!transactionValue}
-                                    helperText={!transactionValue ? 'Введіть значення' : null}
-                                    value={transactionValue}
-                                    onBlur={e => setTransactionValue(e.target.value)}
-                                    onChange={e => setTransactionValue(e.target.value)}
-                                    required
-                                    id="outlined-required"
-                                    label="Занчення"
-                                />
-        
-                                <TextField
-                                    error={!transactionDate || transactionDate.length <= 9}
-                                    helperText={!transactionDate || transactionDate.length <= 9 ? 'Введіть дату типу: "РРРР-ММ-ДД"' : null}
-                                    value={transactionDate} 
-                                    onChange={e => setTransactionDate(e.target.value)}
-                                    required
-                                    id="outlined-required"
-                                    label="Дата"
+                                    <TextField
+                                        type="number"
+                                        error={!transactionValue}
+                                        helperText={!transactionValue ? 'Введіть значення' : null}
+                                        value={transactionValue}
+                                        onBlur={e => setTransactionValue(e.target.value)}
+                                        onChange={e => setTransactionValue(e.target.value)}
+                                        required
+                                        id="outlined-required"
+                                        label="Занчення"
                                     />
-        
-                                <Button 
-                                    disabled={!transactionName || !transactionValue || !transactionCategory || transactionName.length <= 2 || transactionDate.length <= 9}
-                                    color="success"
-                                    variant="contained"
-                                    type='submit' 
-                                    onClick={e => {
-                                    e.preventDefault();
-                                    editTransaction(activeTransaction._id);
-                                    setOpen(!open);
-                                    setActivePaper(false);
-                                    }
-                                }>Редагувати</Button>   
-                            
+            
+                                    <TextField
+                                        error={!transactionDate || transactionDate.length <= 9}
+                                        helperText={!transactionDate || transactionDate.length <= 9 ? 'Введіть дату типу: "РРРР-ММ-ДД"' : null}
+                                        value={transactionDate} 
+                                        onChange={e => setTransactionDate(e.target.value)}
+                                        required
+                                        id="outlined-required"
+                                        label="Дата"
+                                        />
+            
+                                    <Button 
+                                        disabled={!transactionName || !transactionValue || !transactionCategory || transactionName.length <= 2 || transactionDate.length <= 9}
+                                        color="success"
+                                        variant="contained"
+                                        type='submit' 
+                                        onClick={e => {
+                                        e.preventDefault();
+                                        editTransaction(activeTransaction._id);
+                                        setOpen(!open);
+                                        setActivePaper(false);
+                                        }
+                                    }>Редагувати</Button>   
+                                
+                                </Box>
+            
+                                <IconButton
+                                    size="large"
+                                    color="inherit"
+                                    aria-label="menu"
+                                    sx={CloseIconStyles}
+                                    onClick={() => setOpen(!open)}>
+                                        
+                                    <CloseIcon color="primary" />
+                                </IconButton>
                             </Box>
-        
-                            <IconButton
-                                size="large"
-                                color="inherit"
-                                aria-label="menu"
-                                sx={{position: 'absolute', top: -5, right: -5}}
-                                onClick={() => setOpen(!open)}>
-                                    
-                                <CloseIcon color="primary" />
-                            </IconButton>
-                        </Box>
-                    </Box>
                         </Modal>
-                    
-                        <DeleteTransactionsListItem activeTransaction={activeTransaction} activePaper={activePaper} setActivePaper={setActivePaper}/>
                     </Box>
 
                     <IconButton
                         size="large"
                         color="inherit"
                         aria-label="menu"
-                        sx={{position: 'absolute', top: 0, left: 0}}
+                        sx={CloseIconStyles}
                         onClick={() => {setActivePaper(!activePaper); setActiveTransaction("")}}>
                             
                         <CloseIcon color="primary" />
@@ -293,22 +258,20 @@ const TransactionsList = () => {
                 <Box>
                     <ListItem>
                     {activeTransaction.value >= 0 ? 
-                            <Avatar sx={{ bgcolor: '#17B2001C' }}>
+                            <Avatar sx={AvatarSuccessStyles}>
                             <KeyboardArrowUpIcon color='success'/>
-                        </Avatar> : <Avatar sx={{ bgcolor: '#B200001C' }}>
+                        </Avatar> : <Avatar sx={AvatarErrorStyles}>
                                 <KeyboardArrowDownIcon color='error'/>
                             </Avatar>}
                         <ListItemText 
                             sx={{wordWrap: 'break-word', p: 2}} 
                             primary={activeTransaction.category} 
                             secondary={activeTransaction.name} />
-                        <Typography sx={{p: 2, textAlign: "center"}}>
+                        <Typography sx={ValueStyles}>
                             {activeTransaction.value} UAH
                         </Typography>
                     </ListItem>
-                    <Typography sx={{ 
-                        ml: 2, mb: 1, fontSize: "14px", color: "grey", fontWeight: 300
-                    }}>
+                    <Typography sx={FormattedDateStyles}>
                         {formattedDate(activeTransaction.date)}
                     </Typography>
                 </Box>
@@ -316,7 +279,7 @@ const TransactionsList = () => {
             </Paper> 
             )}
         </Transition>
-        </Box>
+    </Box>
     );
 };
 

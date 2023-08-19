@@ -1,10 +1,11 @@
-import { Box, Button, AppBar, Toolbar, Modal, List, ListItem, ListItemText } from "@mui/material";
+import { Box, Button, AppBar, Toolbar, Modal, List, ListItem, ListItemText, Paper } from "@mui/material";
 import ReportInfo from "./ReportInfo";
 import { useEffect, useState } from "react";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { fetchTransactions } from "../../../store/reducers/transactionsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { ReportAppBarStyles, ReportButtonChangeDateStyles, ReportIconStyles, ReportListItemStyles, ReportPaperStyles, ReportToolBarStyles } from "./styles";
 
 const Report = () => {
     const [open, setOpen] = useState(false);
@@ -65,16 +66,14 @@ const Report = () => {
     return (
         <Box >
             <Box>
-                <AppBar sx={{zIndex: 1000}}
+                <AppBar sx={ReportAppBarStyles}
                     position="fixed">
 
-                    <Toolbar sx={{
-                        p: 0,
-                        flexGrow: 1}}>
+                    <Toolbar sx={ReportToolBarStyles}>
 
-                        <ListItem sx={{ ml: 12, flexGrow: 1}}>
-                                <AccountCircleIcon sx={{ height: '30px', width: '30px' }}/>
-                                <ListItemText sx={{ml: 1}}
+                        <ListItem sx={ReportListItemStyles}>
+                                <AccountCircleIcon sx={ReportIconStyles}/>
+                                <ListItemText ml={1}
                             primary={email}/>
                         </ListItem> 
 
@@ -83,7 +82,7 @@ const Report = () => {
                                 onClick={() => setOpen(!open)}
                                 color="inherit"
                                 variant='contained'
-                                sx={{mr:20,color:'black'}}
+                                sx={ReportButtonChangeDateStyles}
                                 endIcon={<AccessTimeIcon />}
                             >
                                 Змінити дату: {buttonText}
@@ -92,9 +91,7 @@ const Report = () => {
                     </Toolbar>
                 </AppBar>
             </Box>
-            <Box sx={{
-                ml:15,
-                mt:15}}>
+            <Box ml={15} mt={15}>
 
                 <ReportInfo activeDate={activeDate}/>
 
@@ -104,14 +101,9 @@ const Report = () => {
                 open={open}
                 onClose={() => setOpen(false)}
             >
-                <Box
-                    sx={{
-                    width:'35%',
-                    bgcolor:'background.paper',
-                    p:5,
-                    m:'auto',
-                    mt:'10%',
-                    outline:'none'}}>
+                <Paper
+                    elevation={4}
+                    sx={ReportPaperStyles}>
                         <List>
                         {dateOptions.map((option) => (
                             <ListItem button key={option.label} onClick={() => {handleDateOptionClick(option)}}>
@@ -119,7 +111,7 @@ const Report = () => {
                             </ListItem>
                         ))}
                         </List>
-                </Box>
+                </Paper>
             </Modal>
         </Box>
     )

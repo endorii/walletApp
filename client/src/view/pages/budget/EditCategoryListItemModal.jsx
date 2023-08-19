@@ -6,6 +6,7 @@ import { TextField, Typography, Box, Button, IconButton, Autocomplete, Modal } f
 import EditIcon from '@mui/icons-material/Edit';
 import { useDispatch } from "react-redux";
 import { editCategoryItem } from "../../../modules/files/actions/category";
+import { EditCategoryAutocompleteStyles, EditCategoryCloseIconStyles, EditCategoryFormStyles, EditCategoryModalStyles, EditCategoryOverlayStyles, EditCategoryTextStyles } from "./styles";
 
 const EditCategoryListItemModal = ({activeCategory}) => {
 
@@ -40,39 +41,21 @@ const EditCategoryListItemModal = ({activeCategory}) => {
                     <EditIcon />
                 </IconButton>
         <Modal open={open}>
-            <Box className="overlay"
-                sx={{
-                    paddingTop: "100px",
-                }}
+            <Box
+                sx={EditCategoryOverlayStyles}
             >
-                <Box className="modal" 
-                sx={{
-                    p: 7,
-                    pt: 3,
-                    position: 'relative', 
-                    borderRadius: "5px", 
-                    backgroundColor: "#fefefe",
-                    margin: "auto",
-                    border: "1px solid #888",
-                    width: "50%"
-                }}>
-                    <Typography className="modal_title" color='primary' sx={{fontSize: "30px", fontWeight: 'bold', textAlign: 'center'}}>
+                <Box
+                sx={EditCategoryModalStyles}>
+                    <Typography color='primary' sx={EditCategoryTextStyles}>
                         Змінити категорію
                     </Typography>
                                     
                     <Box 
-                    component="form"
-                    autoComplete="off"
-                    sx={{
-                        mt: 3,
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: 'center',
-                        gap: "10px",
-                    }}>
+                        component="form"
+                        autoComplete="off"
+                        sx={EditCategoryFormStyles}>
 
                         <TextField
-
                             error={label.length <= 2 || !label}
                             helperText={label.length <= 2 ? 'Введіть більше 2-х символів' : null}
                             value={label} 
@@ -86,7 +69,7 @@ const EditCategoryListItemModal = ({activeCategory}) => {
                             disablePortal
                             id="combo-box-demo"
                             options={["Витрати", "Прибуток"]}
-                            sx={{ width: 250 }}
+                            sx={EditCategoryAutocompleteStyles}
                             value={type}
                             onChange={(event, value) => {setType(value)}}
                             renderInput={(params) => <TextField {...params} error={!type}
@@ -95,7 +78,7 @@ const EditCategoryListItemModal = ({activeCategory}) => {
                         />
 
                         <TextField
-                        type="number"
+                            type="number"
                             error={limit < 0 || !limit}
                             helperText={!limit || limit < 0 ? 'Ліміт повинен бути більше 0' : null}
                             value={limit} 
@@ -111,9 +94,9 @@ const EditCategoryListItemModal = ({activeCategory}) => {
                             variant="contained"
                             type='submit' 
                             onClick={e => {
-                            e.preventDefault();
-                            editCategory(activeCategory._id);
-                            setOpen(!open);
+                                e.preventDefault();
+                                editCategory(activeCategory._id);
+                                setOpen(!open);
                             }
                         }>Редагувати</Button>   
                     
@@ -123,7 +106,7 @@ const EditCategoryListItemModal = ({activeCategory}) => {
                         size="large"
                         color="inherit"
                         aria-label="menu"
-                        sx={{position: 'absolute', top: -5, right: -5}}
+                        sx={EditCategoryCloseIconStyles}
                         onClick={() => setOpen(!open)}>
                             
                         <CloseIcon color="primary" />

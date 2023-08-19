@@ -4,7 +4,6 @@ import { useEffect, useState, useRef } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import EditCategoryListItemModal from "./EditCategoryListItemModal";
 import DeleteCategoryListItem from "./DeleteCategoryListItem";
-// import { fetchBudget } from "../../../store/reducers/budgetSlice";
 import { fetchCategories } from "../../../store/reducers/categoriesSlice";
 import Loader from "../../../modules/files/components/Loader/Loader";
 import Transition from "react-transition-group/Transition";
@@ -12,6 +11,7 @@ import LinearProgressBar from "./LinearProgressBar";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { BudgetInfoWrapperStyles, BudgetInfoPaperStyles, BudgetInfoTotalTextStyles, BudgetInfoTotalValueStyles, CategoriesListButtonWrapperStyles, CategoriesListButtonStyles, CategoriesListPaperStyles, CategoriesListTextStyles, CategoryAvatarSuccessStyles, CategoryAvatarErrorStyles, CategoryListItemTextStyles, CategoryButtonsWrapperStyles, basicCategoryAvatarStyles, basicCategoryIconStyles, basicCategoryListItemTextStyles, CategoriesListCloseButtonStyles } from "./styles";
 
 const BudgetInfo = () => {
     const nodeRef = useRef(null)
@@ -40,51 +40,28 @@ const BudgetInfo = () => {
 
     useEffect(() => {
         dispatch(fetchCategories());
-        // dispatch(fetchBudget());
     }, [])
 
     return (
         <Box
-            sx={{
-                display: 'flex', 
-                justifyContent: 'center', 
-                alignItems: 'center', 
-                flexDirection: 'column'}}>
+            sx={BudgetInfoWrapperStyles}>
 
             <Paper 
                 elevation={4}
-                sx={{
-                    p: 7,
-                    pt: 3,
-                    width: "45%",
-                    zIndex: 1,
-            }}>
+                sx={BudgetInfoPaperStyles}>
 
                 <Typography 
-                    sx={{
-                        fontSize: '24px',
-                        textAlign: 'center',
-                        fontWeight: 400,
-                        mb: 1
-
-                    }}>Загальний стан бюджету</Typography>
+                    sx={BudgetInfoTotalTextStyles}>
+                    
+                    Загальний стан бюджету
+                </Typography>
 
                 <Divider 
                     variant="middle" 
                     component="hr" />
 
                 <Typography 
-                    sx={{
-                        mt: 3,
-                        display: 'flex',
-                        justifyContent: 'start',
-                        alignItems: 'center',
-                        fontSize: '24px',
-                        textAlign: 'center',
-                        fontWeight: 300,
-                        mb: 3
-
-                    }}>Загалом: {budget}
+                    sx={BudgetInfoTotalValueStyles}>Загалом: {budget}
                 </Typography>
 
                 <Divider 
@@ -92,13 +69,10 @@ const BudgetInfo = () => {
                     component="hr" />
 
                 <Box 
-                    sx={{
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        mt: 3}}>
+                    sx={CategoriesListButtonWrapperStyles}>
 
                     <Button 
-                        sx={{ width: '60%'}} 
+                        sx={CategoriesListButtonStyles} 
                         color='success' 
                         variant="outlined"
                         onClick={() => setOpenCategoryList(!openCategoryList)}
@@ -112,51 +86,38 @@ const BudgetInfo = () => {
                 {state => (
                     <Paper 
                     elevation={4} 
-                    sx={{
-                        position: 'relative',  
-                        p: 7,
-                        pt: 3,
-                        width: "45%",
-                        zIndex: 0,
-                        mt: '1%'}}
-                        style={{
-                            ...defaultStyle,
-                            ...transitionStyles[state]
-                          }}>
+                    sx={CategoriesListPaperStyles}
+                    style={{
+                        ...defaultStyle,
+                        ...transitionStyles[state]
+                        }}>
                     <Typography 
-                    variant="h5" 
-                    sx={{textAlign: 'center'}}>
+                        variant="h5" 
+                        sx={CategoriesListTextStyles}>
                     
-                    Список категорій</Typography>
+                        Список категорій
+                    </Typography>
     
                     { isLoading ? <Loader/> :  
     
                     <Box>
                         <Box>
                             {categories? categories.map((category) => (
-                            <Box key={category._id}
-                                
-                            >
+
+                            <Box key={category._id}>
                                 <ListItem>
                                     {category.type === 'Прибуток' ? 
-                                        <Avatar sx={{ bgcolor: '#17B2001C' }}>
+                                        <Avatar sx={CategoryAvatarSuccessStyles}>
                                             <KeyboardArrowUpIcon color='success'/>
-                                        </Avatar> : <Avatar sx={{ bgcolor: '#B200001C' }}>
+                                        </Avatar> : <Avatar sx={CategoryAvatarErrorStyles}>
                                             <KeyboardArrowDownIcon color='error'/>
                                         </Avatar>}
-                                    <ListItemText sx={{
-                                        ml: 2,
-                                        wordWrap: 'break-word'
-                                    }}
+                                    <ListItemText sx={CategoryListItemTextStyles}
                                         primary={category.label.length > 50 ? `${category.label.slice(0, 50)}...` : category.label} 
-                                        secondary={`Ліміт коштів: ${category.limit}`} 
-                                        />
+                                        secondary={`Ліміт коштів: ${category.limit}`}/>
     
                                     <Box 
-                                        sx={{
-                                            display: 'flex', 
-                                            justifyContent: 'center', 
-                                            gap: '10px'}}>
+                                        sx={CategoryButtonsWrapperStyles}>
     
                                         <EditCategoryListItemModal activeCategory={category}/>
     
@@ -179,23 +140,17 @@ const BudgetInfo = () => {
                     {basicCategories ? (
                         <Box>
                         {basicCategories.map((category) => (
-                        <Box key={category.id}
-                            
-                        >
+                        <Box key={category.id}>
                             <ListItem>
                                 <ListItemAvatar>
-                                <Avatar sx={{ bgcolor: '#FFA70030' }}>
-                                    <RemoveIcon sx={{ color: '#FFA700' }}/>
+                                <Avatar sx={basicCategoryAvatarStyles}>
+                                    <RemoveIcon sx={basicCategoryIconStyles}/>
                                 </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText sx={{
-                                    wordWrap: 'break-word'
-                                }}
+                                <ListItemText sx={basicCategoryListItemTextStyles}
                                     primary={category.label} 
                                     secondary={category.limit} />
                             </ListItem>
-                            
-                                {/* <LinearProgressBar category={category}/> */}
 
                             <Divider 
                                 variant="middle" 
@@ -209,10 +164,7 @@ const BudgetInfo = () => {
                         size="large"
                         color="inherit"
                         aria-label="menu"
-                        sx={{
-                            position: 'absolute', 
-                            top: 0, 
-                            left: 0}}
+                        sx={CategoriesListCloseButtonStyles}
                         onClick={() => {setOpenCategoryList(false)}}>
                             
                         <CloseIcon color="primary" />

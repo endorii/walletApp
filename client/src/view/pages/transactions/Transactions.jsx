@@ -5,6 +5,7 @@ import AddTransaction from "../../../modules/files/components/AddTransaction/Add
 import { useEffect } from "react";
 import { fetchTransactions } from "../../../store/reducers/transactionsSlice";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { TransactionsAppBarStyles, TransactionsListItemIconStyles, TransactionsListItemStyles, TransactionsToolbarStyles } from "./styles";
 
 const Transactions = () => {
 
@@ -19,14 +20,14 @@ const Transactions = () => {
         <Box>
             <Box>
                 <AppBar 
-                sx={{zIndex: 1000}}
+                sx={TransactionsAppBarStyles}
                     position="fixed"
                     >
-                    <Toolbar sx={{p: 0, flexGrow: 1}}>
+                    <Toolbar sx={TransactionsToolbarStyles}>
 
-                        <ListItem sx={{ ml: 12, flexGrow: 1}}>
-                                <AccountCircleIcon sx={{ height: '30px', width: '30px' }}/>
-                                <ListItemText sx={{ml: 1}}
+                        <ListItem sx={TransactionsListItemStyles}>
+                                <AccountCircleIcon sx={TransactionsListItemIconStyles}/>
+                                <ListItemText ml={1}
                             primary={email}/>
                         </ListItem>
                         
@@ -36,7 +37,7 @@ const Transactions = () => {
                     </Toolbar>
                 </AppBar>
             </Box>
-            <Box sx={{ml: 15, mt: 15}}>
+            <Box ml={15} mt={15}>
                 <TransactionsList />
             </Box>
         </Box>

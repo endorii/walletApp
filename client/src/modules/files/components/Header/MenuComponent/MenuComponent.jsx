@@ -1,12 +1,10 @@
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import { useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
-import { logout } from '../../../../store/reducers/userSlice';
+import { logout } from '../../../../../store/reducers/userSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Box } from '@mui/material';
+import { Box, IconButton, Menu, MenuItem } from '@mui/material';
+import { MenuIconButtonStyles } from './styles';
 
 export default function MenuComponent() {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -32,20 +30,16 @@ export default function MenuComponent() {
             <IconButton
                 size="large"
                 color="inherit"
-                aria-label="menu"
-                id="basic-button"
                 aria-controls={open ? 'basic-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
-                sx={{mb: 3, p: 0.5 }}
+                sx={MenuIconButtonStyles}
                 onClick={handleClick}
                 >
-
                 <MenuIcon />
             </IconButton>
 
             <Menu
-                id="basic-menu"
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}

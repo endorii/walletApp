@@ -3,6 +3,7 @@ import {Chart as ChartJs, BarElement, CategoryScale, Title,LinearScale, Tooltip 
 import { Bar } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 import Loader from "../../../modules/files/components/Loader/Loader";
+import { ReportInfoPaperInsideStyles, ReportInfoPaperStyles, ReportInfoTextStyles, ReportInfoTextWrapperStyles, ReportInfoWrapperStyles } from "./styles";
 
 ChartJs.register(
     BarElement, CategoryScale, LinearScale, Tooltip, Title
@@ -12,9 +13,6 @@ const ReportInfo = ({activeDate}) => {
 
     const {transactions} = useSelector(state => state.transactions);
     const {isLoading} = useSelector(state => state.transactions)
-
-    // const {startBudget} = useSelector(state => state.startBudget);
-    // const {budget} = useSelector(state => state.budget);
 
     const filteredTransactions = transactions.filter(transaction => {
         const date = new Date(transaction.date);
@@ -36,44 +34,23 @@ const ReportInfo = ({activeDate}) => {
     return (
 
         <Box 
-            sx={{
-                display: 'flex', 
-                justifyContent: 'center', 
-                alignItems: 'center', 
-                flexDirection: 'column'}}>
+            sx={ReportInfoWrapperStyles}>
 
             <Paper 
                 elevation={4}
-                sx={{
-                    p: 7,
-                    pt: 3,
-                    width: "45%"
-            }}>
+                sx={ReportInfoPaperStyles}>
 
-                <Box sx={{
-                    display: 'flex',
-                    margin: '0 auto',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '80px'
-                    
-                }}>
-                    <Box sx={{
-                        textAlign: 'center',
-                        width: '50%',
-                    }}>
-                        <Typography sx={{
-                            color: 'grey'
-                        }}>Початковий баланс</Typography>
+                <Box sx={ReportInfoPaperInsideStyles}>
+                    <Box sx={ReportInfoTextWrapperStyles}>
+                        <Typography sx={ReportInfoTextStyles}> 
+                            Початковий баланс
+                        </Typography>
                         {/* <Typography>{startBudget}</Typography> */}
                     </Box>
-                    <Box sx={{
-                        textAlign: 'center',
-                        width: '50%',
-                    }}>
-                        <Typography sx={{
-                            color: 'grey'
-                        }}>Кінцевий баланс</Typography>
+                    <Box sx={ReportInfoTextWrapperStyles}>
+                        <Typography sx={ReportInfoTextStyles}>
+                            Кінцевий баланс
+                        </Typography>
                         {/* <Typography>{budget}</Typography> */}
                     </Box>
                 </Box>
@@ -81,9 +58,7 @@ const ReportInfo = ({activeDate}) => {
                 <Divider />
 
                 {isLoading ? <Loader/> : <Box>
-                    <Bar style={{
-                        padding: '20px',
-                    }} 
+                    <Bar
                         data={data} 
                     ></Bar>
                 </Box>}

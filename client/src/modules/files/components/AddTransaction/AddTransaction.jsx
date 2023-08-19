@@ -6,8 +6,7 @@ import {Autocomplete} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { addTransaction } from "../../actions/transaction";
-// import { fetchBudget } from "../../../../store/reducers/budgetSlice";
-// import { v4 as uuidv4 } from 'uuid';
+import { AddTransactionMainButtonStyles, AddTransactionWrapperStyles, AddTransactionSubWrapperStyles, AddTransactionTextStyles, AddTransactionFormStyles, AddTransactionAutocompleteStyles, AddTransactionCloseIconStyles } from "./styles";
 
 const AddTransaction = () => {
 
@@ -35,7 +34,6 @@ const AddTransaction = () => {
 
     const {categories} = useSelector(state => state.categories);
     const {basicCategories} = useSelector(state => state.categories);
-    const {budget} = useSelector(state => state.budget);
 
     const clearForm = () => {
         setTransactionName('');
@@ -62,35 +60,20 @@ const AddTransaction = () => {
                 onClick={() => setOpen(!open)}
                 color="inherit" 
                 variant='contained' 
-                sx={{mr: 20, color: 'black'}}
+                sx={AddTransactionMainButtonStyles}
                 endIcon={<AddIcon />}
 
             >Додати транзакцію</Button>
             <Modal open={open}>
                 <Box 
-                    sx={{
-                        paddingTop: "100px",
-                    }}
+                    sx={AddTransactionWrapperStyles}
                 >
                     <Box 
-                        sx={{
-                            p: 7,
-                            pt: 3,
-                            position: 'relative', 
-                            borderRadius: "5px", 
-                            backgroundColor: "#fefefe",
-                            margin: "auto",
-                            border: "1px solid #888",
-                            width: "50%"
-                        }}>
+                        sx={AddTransactionSubWrapperStyles}>
 
                         <Typography 
                             color='primary' 
-                            sx={{
-                                mb: 2, 
-                                fontSize: "30px", 
-                                fontWeight: 'bold', 
-                                textAlign: 'center'}}>
+                            sx={AddTransactionTextStyles}>
 
                             Додати транзакцію
                         </Typography>
@@ -102,13 +85,7 @@ const AddTransaction = () => {
                         <Box
                             component="form"
                             autoComplete="off"
-                            sx={{
-                                mt: 3,
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: 'center',
-                                gap: "10px",
-                            }}>
+                            sx={AddTransactionFormStyles}>
 
                             <TextField
                                 error={ touchedTransactionName && (transactionName.length <= 2 || !transactionName)}
@@ -125,7 +102,7 @@ const AddTransaction = () => {
                                 disablePortal
                                 id="combo-box-demo"
                                 options={categories && basicCategories ? categories.concat(basicCategories) : []}
-                                sx={{ width: 300 }}
+                                sx={AddTransactionAutocompleteStyles}
                                 value={transactionCategory}
                                 onChange={(event, value) => {
                                     setTransactionCategory(value ? value.label : "");
@@ -167,7 +144,6 @@ const AddTransaction = () => {
                                 type='submit' 
                                 onClick={e => {
                                 e.preventDefault();
-                                // minusBudget(budget);
                                 createObj();
                                 clearForm()}
 
@@ -178,7 +154,7 @@ const AddTransaction = () => {
                             size="large"
                             color="inherit"
                             aria-label="menu"
-                            sx={{position: 'absolute', top: -5, right: -5}}
+                            sx={AddTransactionCloseIconStyles}
                             onClick={() => {setOpen(!open); clearForm()}}>
                                 
                             <CloseIcon color="primary" />
