@@ -29,10 +29,10 @@ const AddCategory = () => {
 
     const createObj = async() => {
         try {
-
             await addCategory(category, limit, type);
 
-            dispatch(fetchCategories())
+            dispatch(fetchCategories());
+            clearForm();
 
         } catch (error) {
         console.error('Помилка при виконанні POST-запиту:', error);
@@ -113,11 +113,9 @@ const AddCategory = () => {
                             color="primary"
                             variant="contained"
                             type='submit' 
-                            onClick={e => {
-                                e.preventDefault();
-                                createObj();
-                                clearForm();
-                            }}>Додати
+                            onClick={() => {createObj()}}>
+                                
+                                Додати
                         </Button>
                     </Box>
 

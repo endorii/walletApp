@@ -11,31 +11,17 @@ import LinearProgressBar from "./LinearProgressBar";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { BudgetInfoWrapperStyles, BudgetInfoPaperStyles, BudgetInfoTotalTextStyles, BudgetInfoTotalValueStyles, CategoriesListButtonWrapperStyles, CategoriesListButtonStyles, CategoriesListPaperStyles, CategoriesListTextStyles, CategoryAvatarSuccessStyles, CategoryAvatarErrorStyles, CategoryListItemTextStyles, CategoryButtonsWrapperStyles, basicCategoryAvatarStyles, basicCategoryIconStyles, basicCategoryListItemTextStyles, CategoriesListCloseButtonStyles } from "./styles";
+import { BudgetInfoWrapperStyles, BudgetInfoPaperStyles, BudgetInfoTotalTextStyles, BudgetInfoTotalValueStyles, CategoriesListButtonWrapperStyles, CategoriesListButtonStyles, CategoriesListPaperStyles, CategoriesListTextStyles, CategoryAvatarSuccessStyles, CategoryAvatarErrorStyles, CategoryListItemTextStyles, CategoryButtonsWrapperStyles, basicCategoryAvatarStyles, basicCategoryIconStyles, basicCategoryListItemTextStyles, CategoriesListCloseButtonStyles, defaultStyle, transitionStyles } from "./styles";
 
 const BudgetInfo = () => {
     const nodeRef = useRef(null)
-    const duration = 400;
-
-    const defaultStyle = {
-        transition: `all ${duration}ms ease-in-out`,
-        opacity: 1,
-        display: "block",
-        transform: 'translateY(0%)',
-    }
-    
-    const transitionStyles = {
-        entering: { display: "block", opacity: 0, transform: 'translateY(0%)' },
-        entered:  { display: "block", opacity: 1, transform: 'translateY(0%)' },
-        exiting:  { display: "block", opacity: 0.3, transform: 'translateY(-80%)' },
-        exited: { display: "none", opacity: 0, transform: 'translateY(-80%)' },
-    };
-    
     const dispatch = useDispatch();
+
     const {categories} = useSelector(state => state.categories);
     const {basicCategories} = useSelector(state => state.categories);
     const {isLoading} = useSelector(state => state.categories)
     const {budget} = useSelector(state => state.budget)
+
     const [openCategoryList, setOpenCategoryList] = useState(true);
 
     useEffect(() => {
@@ -43,15 +29,13 @@ const BudgetInfo = () => {
     }, [])
 
     return (
-        <Box
-            sx={BudgetInfoWrapperStyles}>
+        <Box sx={BudgetInfoWrapperStyles}>
 
             <Paper 
                 elevation={4}
                 sx={BudgetInfoPaperStyles}>
 
-                <Typography 
-                    sx={BudgetInfoTotalTextStyles}>
+                <Typography sx={BudgetInfoTotalTextStyles}>
                     
                     Загальний стан бюджету
                 </Typography>
@@ -60,29 +44,28 @@ const BudgetInfo = () => {
                     variant="middle" 
                     component="hr" />
 
-                <Typography 
-                    sx={BudgetInfoTotalValueStyles}>Загалом: {budget}
+                <Typography sx={BudgetInfoTotalValueStyles}> 
+                    Загалом: {budget}
                 </Typography>
 
                 <Divider 
                     variant="middle" 
                     component="hr" />
 
-                <Box 
-                    sx={CategoriesListButtonWrapperStyles}>
-
+                <Box sx={CategoriesListButtonWrapperStyles}>
                     <Button 
                         sx={CategoriesListButtonStyles} 
                         color='success' 
                         variant="outlined"
-                        onClick={() => setOpenCategoryList(!openCategoryList)}
+                        onClick={() => setOpenCategoryList(!openCategoryList)}> 
 
-                    >Список категорій</Button>
+                        Список категорій
+                    </Button>
                 </Box>
             
             </Paper>
             
-            <Transition nodeRef={nodeRef} in={openCategoryList} timeout={duration}>
+            <Transition nodeRef={nodeRef} in={openCategoryList} timeout={0}>
                 {state => (
                     <Paper 
                     elevation={4} 
@@ -116,8 +99,7 @@ const BudgetInfo = () => {
                                         primary={category.label.length > 50 ? `${category.label.slice(0, 50)}...` : category.label} 
                                         secondary={`Ліміт коштів: ${category.limit}`}/>
     
-                                    <Box 
-                                        sx={CategoryButtonsWrapperStyles}>
+                                    <Box sx={CategoryButtonsWrapperStyles}>
     
                                         <EditCategoryListItemModal activeCategory={category}/>
     

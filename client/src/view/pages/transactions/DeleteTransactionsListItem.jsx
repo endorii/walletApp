@@ -9,10 +9,6 @@ const DeleteTransactionsListItem = ({activeTransaction, activePaper, setActivePa
     const [transactionID, setTransactionID] = useState(activeTransaction._id)
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        setTransactionID(activeTransaction._id);
-    }, [activeTransaction]);
-
     const deleteTransaction = async (transactionID) => {
         try{
             await deleteTransactionsItem(transactionID);
@@ -23,6 +19,10 @@ const DeleteTransactionsListItem = ({activeTransaction, activePaper, setActivePa
             console.error('Помилка при виконанні DELETE-запиту:', error);
         }
     }
+
+    useEffect(() => {
+        setTransactionID(activeTransaction._id);
+    }, [activeTransaction]);
 
     return (
         <Box>

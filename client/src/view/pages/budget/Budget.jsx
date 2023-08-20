@@ -5,29 +5,24 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../../store/reducers/categoriesSlice";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
 import { BudgetAppBarStyles, BudgetToolbarStyles, BudgetAccountStyles, BudgetAccountIconStyles, BudgetAccountTextStyles, BudgetWrapperStyles } from "./styles";
 import { fetchTransactions } from "../../../store/reducers/transactionsSlice";
 
 const Budget = () => {
 
+    const dispatch = useDispatch();
     const {email} = useSelector(state => state.user.user)
 
-    const dispatch = useDispatch();
-
     useEffect(()=> {
-        dispatch(fetchCategories())
-        dispatch(fetchTransactions())
+        dispatch(fetchCategories());
+        dispatch(fetchTransactions());
     }, [])
 
     return(
         <Box>
             <Box>
-                <AppBar sx={BudgetAppBarStyles}
-                    position="fixed">
-
+                <AppBar sx={BudgetAppBarStyles} position="fixed">
                     <Toolbar sx={BudgetToolbarStyles}>
-                        
                         <ListItem sx={BudgetAccountStyles}>
                                 <AccountCircleIcon sx={BudgetAccountIconStyles}/>
                                 <ListItemText sx={BudgetAccountTextStyles}
@@ -40,7 +35,6 @@ const Budget = () => {
                 </AppBar>
             </Box>
             <Box sx={BudgetWrapperStyles}>
-                    
                 <BudgetInfo/>
             </Box>
         </Box>

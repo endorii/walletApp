@@ -1,3 +1,19 @@
+const duration = 450;
+
+export const defaultStyle = {
+    transition: `all ${duration}ms ease-in-out`,
+    opacity: 0,
+    display: "none",
+    transform: 'translateX(-100%)',
+}
+
+export const transitionStyles = {
+    entering: { display: "block", opacity: 0, transform: 'translateX(-100%)' },
+    entered:  { display: "block", opacity: 1, transform: 'translateX(0)' },
+    exiting:  { display: "none", opacity: 1, transform: 'translateX(-100%)' },
+    exited:  { display: "none", opacity: 0, transform: 'translateX(-100%)' },
+};
+
 export const TransactionsAppBarStyles = {
     zIndex: 1000
 }
@@ -122,4 +138,9 @@ export const CloseIconStyles = {
     position: 'absolute', 
     top: -5, 
     right: -5
+}
+
+export const TransactionsListItemTextStyles = {
+    wordWrap: 'break-word', 
+    p: 2
 }

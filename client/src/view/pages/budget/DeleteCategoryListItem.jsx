@@ -8,12 +8,9 @@ import { deleteCategoryItem } from "../../../modules/files/actions/category";
 
 const DeleteCategoryListItem = ({activeCategory}) => {
 
-    const [categoryID, setCategoryID] = useState(activeCategory._id)
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        setCategoryID(activeCategory._id);
-    }, [activeCategory]);
+    const [categoryID, setCategoryID] = useState(activeCategory._id)
 
     const deleteCategory = async (categoryID) => {
         try{
@@ -25,6 +22,11 @@ const DeleteCategoryListItem = ({activeCategory}) => {
             console.error('Помилка при виконанні DELETE-запиту:', error);
         }
     }
+
+    useEffect(() => {
+        setCategoryID(activeCategory._id);
+    }, [activeCategory]);
+
     return (
         <Box>
             <IconButton aria-label="delete" color='error' onClick={() => { deleteCategory(categoryID)}}>

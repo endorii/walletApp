@@ -7,19 +7,18 @@ import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { addTransaction } from "../../actions/transaction";
 import { AddTransactionMainButtonStyles, AddTransactionWrapperStyles, AddTransactionSubWrapperStyles, AddTransactionTextStyles, AddTransactionFormStyles, AddTransactionAutocompleteStyles, AddTransactionCloseIconStyles } from "./styles";
+import { getFormattedDate } from "./functions";
 
 const AddTransaction = () => {
 
-    let today = new Date();
-    let year = today.getFullYear();
-    let month = ('0' + (today.getMonth() + 1)).slice(-2);
-    let day = ('0' + today.getDate()).slice(-2);
-    let formattedDate = year + '-' + month + '-' + day;
+    const dispatch = useDispatch();
+
+    const [open, setOpen] = useState(false);
 
     const [transactionName, setTransactionName] = useState('');
     const [transactionValue, setTransactionValue] = useState(null);
     const [transactionCategory, setTransactionCategory] = useState('');
-    const [transactionDate, setTransactionDate] = useState(formattedDate);
+    const [transactionDate, setTransactionDate] = useState(getFormattedDate);
 
     const [touchedTransactionName, setTouchedTransactionName] = useState(false);
     const [touchedTransactionValue, setTouchedTransactionValue] = useState(false);
@@ -27,10 +26,6 @@ const AddTransaction = () => {
     const [touchedTransactionDate, setTouchedTransactionDate] = useState(false);
 
     const [fullTransactionCategory, setFullTransactionCategory] = useState('');
-    
-    const [open, setOpen] = useState(false);
-
-    const dispatch = useDispatch();
 
     const {categories} = useSelector(state => state.categories);
     const {basicCategories} = useSelector(state => state.categories);
@@ -39,7 +34,7 @@ const AddTransaction = () => {
         setTransactionName('');
         setTransactionValue(null);
         setTransactionCategory('');
-        setTransactionDate(formattedDate);
+        setTransactionDate(getFormattedDate);
         setOpen(false);
     }
 
@@ -48,6 +43,7 @@ const AddTransaction = () => {
             await addTransaction(transactionName, transactionValue, transactionCategory, transactionDate);
 
             dispatch(fetchTransactions());
+            clearForm();
 
         } catch (error) {
             console.error('Помилка при виконанні POST-запиту:', error);
@@ -130,7 +126,7 @@ const AddTransaction = () => {
                                 error={touchedTransactionDate && (transactionDate.length <= 9 || !transactionDate)}
                                 helperText={touchedTransactionDate && transactionDate.length <= 9 ? 'Введіть дату типу: "РРРР-ММ-ДД"' : null}
                                 value={transactionDate} 
-                                onBlur={() => transactionDate === '' ? setTouchedTransactionDate(formattedDate) : transactionDate}
+                                onBlur={() => transactionDate === '' ? setTouchedTransactionDate(getFormattedDate) : transactionDate}
                                 onChange={e => setTransactionDate(e.target.value)}
                                 required
                                 id="outlined-required"
@@ -142,12 +138,10 @@ const AddTransaction = () => {
                                 color="primary"
                                 variant="contained"
                                 type='submit' 
-                                onClick={e => {
-                                e.preventDefault();
-                                createObj();
-                                clearForm()}
+                                onClick={() => {createObj()}}>
 
-                            }>Додати</Button>
+                                    Додати
+                            </Button>
                         </Box>
 
                         <IconButton

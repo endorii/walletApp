@@ -33,13 +33,10 @@ const ReportInfo = ({activeDate}) => {
 
     return (
 
-        <Box 
-            sx={ReportInfoWrapperStyles}>
-
+        <Box sx={ReportInfoWrapperStyles}>
             <Paper 
                 elevation={4}
                 sx={ReportInfoPaperStyles}>
-
                 <Box sx={ReportInfoPaperInsideStyles}>
                     <Box sx={ReportInfoTextWrapperStyles}>
                         <Typography sx={ReportInfoTextStyles}> 
@@ -62,7 +59,6 @@ const ReportInfo = ({activeDate}) => {
                         data={data} 
                     ></Bar>
                 </Box>}
-
             </Paper>
         </Box>
     )

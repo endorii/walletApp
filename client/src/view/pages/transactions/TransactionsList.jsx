@@ -10,68 +10,29 @@ import { fetchTransactions } from "../../../store/reducers/transactionsSlice";
 import Transition from 'react-transition-group/Transition';
 import { editTransactionItem } from '../../../modules/files/actions/transaction';
 import MonthPicker from '../../../modules/auth/components/MonthPicker/MonthPicker';
-import { AutocompleteStyles, AvatarErrorStyles, AvatarSuccessStyles, CloseIconStyles, FormattedDateStyles, TransactionsListActiveButtonsWrapperStyles, TransactionsListActiveInfoTextStyles, TransactionsListActiveInsideStyles, TransactionsListActiveModalFormStyles, TransactionsListActiveModalStyles, TransactionsListActiveModalTextStyles, TransactionsListActivePaperStyles, TransactionsListListItemTextStyles, TransactionsListPaperStyles, TransactionsListTextNoTransactionsStyles, TransactionsListWrapperStyles, ValueStyles } from './styles';
+import { AutocompleteStyles, AvatarErrorStyles, AvatarSuccessStyles, CloseIconStyles, FormattedDateStyles, TransactionsListActiveButtonsWrapperStyles, TransactionsListActiveInfoTextStyles, TransactionsListActiveInsideStyles, TransactionsListActiveModalFormStyles, TransactionsListActiveModalStyles, TransactionsListActiveModalTextStyles, TransactionsListActivePaperStyles, TransactionsListItemTextStyles, TransactionsListListItemTextStyles, TransactionsListPaperStyles, TransactionsListTextNoTransactionsStyles, TransactionsListWrapperStyles, ValueStyles,  defaultStyle, transitionStyles } from './styles';
+
+import { formattedDate, filteredDataOnMonthAndYear } from './functions';
 
 const TransactionsList = () => {
     const nodeRef = useRef(null)
-    const duration = 450;
-
-    const defaultStyle = {
-        transition: `all ${duration}ms ease-in-out`,
-        opacity: 0,
-        display: "none",
-        transform: 'translateX(-100%)',
-    }
-
-    const transitionStyles = {
-        entering: { display: "block", opacity: 0, transform: 'translateX(-100%)' },
-        entered:  { display: "block", opacity: 1, transform: 'translateX(0)' },
-        exiting:  { display: "none", opacity: 1, transform: 'translateX(-100%)' },
-        exited:  { display: "none", opacity: 0, transform: 'translateX(-100%)' },
-    };
-
-    const {transactions} = useSelector(state => state.transactions);
-    const isLoading = useSelector(state => state.transactions.isLoading);
     const dispatch = useDispatch();
+
     const {date} = useSelector(state => state.date);
+    const {transactions, isLoading} = useSelector(state => state.transactions);
+    const {categories, basicCategories} = useSelector(state => state.categories)
+    
+    const [open, setOpen] = useState(false);
     const [activePaper, setActivePaper] = useState(false);
     const [activeTransaction, setActiveTransaction] = useState({});
 
-    const [open, setOpen] = useState(false);
     const [transactionName, setTransactionName] = useState(activeTransaction.name);
     const [transactionValue, setTransactionValue] = useState(activeTransaction.value);
     const [transactionCategory, setTransactionCategory] = useState(activeTransaction.category);
     const [transactionDate, setTransactionDate] = useState(activeTransaction.date);
-    const {categories} = useSelector(state => state.categories)
-    const {basicCategories} = useSelector(state => state.categories);
-
-    const formattedDate = (transactionDate) => {
-        const date = new Date(transactionDate);
-        if (isNaN(date)) {
-            return 'Invalid date';
-        }
-        const options = { day: 'numeric', weekday: 'long', month: 'long', year: 'numeric' };
-        const formattedDate = new Intl.DateTimeFormat('uk-UA', options).format(date);
-        const capitalizedDate = formattedDate.split(' ').map(word => word[0].toUpperCase() + word.slice(1)).join(' ');
-        return capitalizedDate;
-    }
-
-    const filteredDataOnMonthAndYear = () => {
-        if (transactions) {
-            const filteredTransactions = transactions.filter(transaction => {
-                const transactionDate = new Date(transaction.date);
-                const filterDate = new Date(date);
-                return transactionDate.getMonth() === filterDate.getMonth() && transactionDate.getFullYear() === filterDate.getFullYear();
-            });
-            return filteredTransactions;
-        } else {
-            return [];
-        }
-    }
 
     const editTransaction = async (transactionID) => {
         try {
-
             await editTransactionItem(transactionID, transactionName, transactionValue, transactionCategory, transactionDate);
 
             dispatch(fetchTransactions());
@@ -103,10 +64,10 @@ const TransactionsList = () => {
             
             <Box>
                 <Divider mt={2} variant="middle" component="hr" />
-                {filteredDataOnMonthAndYear().length <= 0 ? <Typography sx={TransactionsListTextNoTransactionsStyles}>
+                {filteredDataOnMonthAndYear(transactions, date).length <= 0 ? <Typography sx={TransactionsListTextNoTransactionsStyles}>
                 Немає доступних транзакцій 😢
             </Typography> : 
-                filteredDataOnMonthAndYear().map((transaction) => (
+                filteredDataOnMonthAndYear(transactions, date).map((transaction) => (
                 <Box key={transaction._id} 
                 onClick={() => {setActivePaper(true); setActiveTransaction(transaction)}}
                 >
@@ -146,9 +107,7 @@ const TransactionsList = () => {
                     ...transitionStyles[state]
                   }}
                 >   
-                    <Box
-                        sx={TransactionsListActiveInsideStyles}
-                    >
+                    <Box sx={TransactionsListActiveInsideStyles}>
                     <Typography 
                         sx={TransactionsListActiveInfoTextStyles}>
 
@@ -214,7 +173,7 @@ const TransactionsList = () => {
                                         required
                                         id="outlined-required"
                                         label="Дата"
-                                        />
+                                    />
             
                                     <Button 
                                         disabled={!transactionName || !transactionValue || !transactionCategory || transactionName.length <= 2 || transactionDate.length <= 9}
@@ -222,12 +181,14 @@ const TransactionsList = () => {
                                         variant="contained"
                                         type='submit' 
                                         onClick={e => {
-                                        e.preventDefault();
-                                        editTransaction(activeTransaction._id);
-                                        setOpen(!open);
-                                        setActivePaper(false);
+                                            e.preventDefault();
+                                            editTransaction(activeTransaction._id);
+                                            setOpen(!open);
+                                            setActivePaper(false);
                                         }
-                                    }>Редагувати</Button>   
+                                    }>
+                                        Редагувати
+                                    </Button>   
                                 
                                 </Box>
             
@@ -264,7 +225,7 @@ const TransactionsList = () => {
                                 <KeyboardArrowDownIcon color='error'/>
                             </Avatar>}
                         <ListItemText 
-                            sx={{wordWrap: 'break-word', p: 2}} 
+                            sx={TransactionsListItemTextStyles} 
                             primary={activeTransaction.category} 
                             secondary={activeTransaction.name} />
                         <Typography sx={ValueStyles}>

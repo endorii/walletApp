@@ -1,3 +1,19 @@
+const duration = 400;
+
+export const defaultStyle = {
+    transition: `all ${duration}ms ease-in-out`,
+    opacity: 1,
+    display: "block",
+    transform: 'translateY(0%)',
+}
+
+export const transitionStyles = {
+    entering: { display: "block", opacity: 0, transform: 'translateY(0%)' },
+    entered:  { display: "block", opacity: 1, transform: 'translateY(0%)' },
+    exiting:  { display: "block", opacity: 0.3, transform: 'translateY(-80%)' },
+    exited: { display: "none", opacity: 0, transform: 'translateY(-80%)' },
+};
+
 export const BudgetAppBarStyles = {
     zIndex: 1000
 }
