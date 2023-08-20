@@ -114,7 +114,7 @@ const AddTransaction = () => {
                                 error={touchedTransactionValue && !transactionValue}
                                 disabled={!transactionCategory}
                                 helperText={touchedTransactionValue && !transactionValue ? 'Введіть значення' : null}
-                                value={fullTransactionCategory.type === "Прибуток" ? Math.abs(transactionValue) : -Math.abs(transactionValue)} 
+                                value={fullTransactionCategory ? (fullTransactionCategory.type === "Прибуток" ? Math.abs(transactionValue) : -Math.abs(transactionValue)) : ''}
                                 onBlur={(e) => {setTouchedTransactionValue(true); setTransactionValue(e.target.value)}}
                                 onChange={e => setTransactionValue(e.target.value)}
                                 required

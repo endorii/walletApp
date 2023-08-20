@@ -109,12 +109,12 @@ const AddCategory = () => {
                         />      
 
                         <Button 
-                            disabled={category.length <= 2 || !category || limit < 0 || !limit}
+                            disabled={category.length <= 2 || !category || limit < 0 || !limit || !type}
                             color="primary"
                             variant="contained"
                             type='submit' 
                             onClick={() => {createObj()}}>
-                                
+
                                 Додати
                         </Button>
                     </Box>

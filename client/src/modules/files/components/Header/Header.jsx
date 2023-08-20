@@ -27,8 +27,8 @@ const Header = () => {
                     
                         <MenuComponent/>
 
-                        {NavLinks.map(link => 
-                            <NavLink 
+                        {NavLinks.map((link, i) => 
+                            <NavLink key={i}
                             to={link.path} 
                             style={({ isActive, isPending }) => {
                                 return {

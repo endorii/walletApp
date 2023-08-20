@@ -23,7 +23,7 @@ const EditCategoryListItemModal = ({activeCategory}) => {
     
             dispatch(fetchCategories());
             dispatch(fetchTransactions());
-            
+
             setOpen(!open);
 
         } catch (error) {
@@ -89,7 +89,7 @@ const EditCategoryListItemModal = ({activeCategory}) => {
                             />
 
                             <Button 
-                                disabled={label.length <= 2 || !label || limit < 0 || !limit}
+                                disabled={label.length <= 2 || !label || limit < 0 || !limit || !type}
                                 color="success"
                                 variant="contained"
                                 type='submit' 
