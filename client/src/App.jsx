@@ -14,41 +14,63 @@ import Registartion from './modules/auth/components/Registration/Registration';
 import { auth } from './modules/auth/actions/user';
 import './app.css';
 
+const HeaderWrapper = () => {
+    const location = useLocation();
+    return location.pathname !== '/auth/login' && location.pathname !== '/auth/registration' && <Header />;
+}
+
+const NavigationHandler = () => {
+    const isAuth = useSelector(state => state.user.isAuth);
+    console.log(isAuth);
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        if (isAuth) {
+            navigate('/transactions');
+        } else if (!isAuth && location.pathname === '/auth/registration') {
+            return
+        } else if (!isAuth && location.pathname === '/auth/login') {
+            return
+        } else {
+            navigate('/auth/login');
+        }
+    }, [isAuth]);
+
+    return (
+        <Box className="App">
+            <HeaderWrapper />
+
+            <Routes>
+                <Route path='/' element={isAuth ? <Transactions/> : <Registartion/>} />
+            </Routes>
+
+            {isAuth === false && 
+            <Routes>
+                <Route path='/auth/login' element={<Login/>} />
+                <Route path='/auth/registration' element={<Registartion/>} />
+            </Routes>}
+
+            {isAuth === true ? 
+            <Routes>
+                <Route path="/transactions" element={<Transactions/>}/>
+                <Route path="/report" element={<Report/>}/>
+                <Route path="/budget" element={<Budget/>}/>
+            </Routes> : null}
+        </Box>
+    );
+}
+
 const App = () => {
     const dispatch = useDispatch();
-    const isAuth = useSelector(state => state.user.isAuth);
-
-    const HeaderWrapper = () => {
-        const location = useLocation();
-        return location.pathname !== '/auth/login' && location.pathname !== '/auth/registration' && <Header />;
-    }
 
     useEffect(() => {
         dispatch(auth());
-        // dispatch(fetchTransactions());
-        // dispatch(fetchCategories());
-
-        // dispatch(fetchBudget());
-        // dispatch(fetchStartBudget());
     }, []);
 
     return (
         <Router>
-            <Box className="App">
-                <HeaderWrapper />
-                {isAuth === false && 
-                <Routes>
-                    <Route path='/auth/login' element={<Login/>} />
-                    <Route path='/auth/registration' element={<Registartion/>} />
-                </Routes>}
-
-                {isAuth === true ? 
-                <Routes>
-                    <Route path="/transactions" element={<Transactions/>}/>
-                    <Route path="/report" element={<Report/>}/>
-                    <Route path="/budget" element={<Budget/>}/>
-                </Routes> : null}
-            </Box>
+            <NavigationHandler />
         </Router>
     );
 };
